@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 1.1 - Panorama de las familias de bases de datos</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.34em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.two.b{ grid-template-columns:0.9fr 1.1fr; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- PORTADA -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 1 - Sesion 1.1</div>
+    <div class="big">Panorama de las familias<br>de bases de datos</div>
+    <div class="sub">Cuatro modelos de almacenamiento, un cliente comun: Python</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- SEMBLANZA -->
+<section>
+  <div class="kicker">Instructor</div>
+  <h2>David Armando Lopez Noria</h2>
+  <p class="small">Implementacion de sistemas multiagente y gobierno de agentes.
+  Cientifico de datos y arquitecto de datos.</p>
+  <table class="gt">
+    <tr><th>Sector</th><th>Experiencia</th></tr>
+    <tr><td>Telecomunicaciones</td><td>Arquitectura y explotacion de datos operativos</td></tr>
+    <tr><td>Banca</td><td>Modelado, gobierno de datos y sistemas analiticos</td></tr>
+    <tr><td>Gobierno</td><td>Integracion de fuentes y calidad de datos</td></tr>
+    <tr><td>Educacion</td><td>Formacion tecnica y diseno de programas</td></tr>
+  </table>
+  <div class="box small mt">
+    Correo: <code>dalopeznoria@gmail.com</code><br>
+    LinkedIn: <code>https://www.linkedin.com/in/dalopeznoria/</code>
+  </div>
+  <div class="foot">SESION 1.1 - INSTRUCTOR</div>
+</section>
+
+<!-- AGENDA -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">15</td><td>Panorama de las cuatro familias y la ficha de seis puntos</td><td>Exposicion</td></tr>
+    <tr><td class="n">15</td><td>Presentacion del caso: procesadora de pagos</td><td>Exposicion</td></tr>
+    <tr><td class="n">20</td><td>SQLite y la interfaz DB-API desde Python</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller sobre la base de movimientos</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Revision en vivo y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="box key small">
+    Distribucion del curso completo: 70 por ciento practica, 30 por ciento exposicion.
+  </div>
+  <div class="foot">SESION 1.1 - AGENDA</div>
+</section>
+
+<!-- PREGUNTA DE APERTURA -->
+<section>
+  <div class="kicker">Pregunta de apertura</div>
+  <h2>Por que existen tantas bases de datos</h2>
+  <p class="small">Un archivo de hoja de calculo resuelve el almacenamiento de datos
+  tabulares hasta cierto punto. A partir de ahi aparecen exigencias que ese formato no
+  cubre: acceso simultaneo de varios usuarios, garantia de que una operacion se aplica
+  de forma completa, busqueda eficiente sobre millones de registros, y control sobre
+  quien puede leer cada dato.</p>
+  <div class="box small">
+    Cada familia de bases de datos optimiza un conjunto distinto de esas exigencias.
+    Ninguna las cubre todas al mismo costo.
+  </div>
+  <div class="box key small">
+    <strong>Competencia del curso:</strong> reconocer que exigencia domina en un
+    requerimiento dado, y seleccionar el motor en consecuencia.
+  </div>
+  <div class="foot">SESION 1.1 - APERTURA</div>
+</section>
+
+<!-- DIAGRAMA 1: FAMILIAS -->
+<section>
+  <div class="kicker">Las cuatro familias del curso</div>
+  <h2>Un cliente, cuatro destinos</h2>
+  <div class="fig"><img src="c1_s1_d1_familias.png" alt="Las cuatro familias de bases de datos"></div>
+  <div class="cap">Figura 1. Familias cubiertas por el curso y la exigencia que atiende cada una</div>
+  <div class="foot">SESION 1.1 - FAMILIAS</div>
+</section>
+
+<!-- TABLA COMPARATIVA -->
+<section>
+  <div class="kicker">Vision general</div>
+  <h2>Que optimiza cada familia</h2>
+  <table class="gt">
+    <tr><th>Familia</th><th>Motor</th><th>Optimiza</th><th>Cede</th></tr>
+    <tr><td>Relacional</td><td>PostgreSQL</td><td>Integridad, relaciones y consulta expresiva</td><td>Flexibilidad del esquema</td></tr>
+    <tr><td>Documental</td><td>MongoDB</td><td>Esquema variable y lectura de agregados completos</td><td>Consistencia entre colecciones</td></tr>
+    <tr><td>Clave-valor</td><td>Redis</td><td>Latencia muy baja en acceso por clave</td><td>Capacidad de consulta</td></tr>
+    <tr><td>Analitico columnar</td><td>BigQuery</td><td>Agregacion sobre volumen alto</td><td>Escritura por registro individual</td></tr>
+  </table>
+  <div class="box small mt">
+    La columna <strong>Cede</strong> es la que sostiene la decision de arquitectura.
+    Elegir un motor implica aceptar lo que ese motor entrega a cambio.
+  </div>
+  <div class="foot">SESION 1.1 - COMPARATIVA</div>
+</section>
+
+<!-- FICHA DE SEIS PUNTOS -->
+<section>
+  <div class="kicker">Metodo transversal</div>
+  <h2>La ficha de seis puntos</h2>
+  <p class="small">Cada motor del curso se documenta con esta misma estructura. Al
+  cierre, el conjunto de fichas constituye la matriz de decision que se evalua en el
+  proyecto final.</p>
+  <ol class="small">
+    <li>Modelo de datos que asume</li>
+    <li>Operaciones en las que resulta eficiente</li>
+    <li>Garantias de consistencia que ofrece</li>
+    <li>Relacion entre costo de escritura y costo de lectura</li>
+    <li>Interfaz desde Python y lectura hacia pandas o Polars</li>
+    <li>Escenario en el que conviene y escenario en el que no</li>
+  </ol>
+  <div class="box key small">
+    Al final de esta sesion, cada participante completa la ficha de SQLite. Es el
+    primer renglon de la matriz.
+  </div>
+  <div class="foot">SESION 1.1 - FICHA</div>
+</section>
+
+<!-- CASO DE ESTUDIO -->
+<section>
+  <div class="kicker">Caso de estudio</div>
+  <h2>Una procesadora de pagos</h2>
+  <p class="small">Todas las sesiones del curso trabajan sobre el mismo dominio. La
+  continuidad permite que la comparacion entre motores sea directa: la misma pregunta
+  de negocio se resuelve cuatro veces, con cuatro tecnologias.</p>
+  <div class="two">
+    <div>
+      <h3 class="small">Entidades</h3>
+      <ul class="check tiny">
+        <li>Comercios</li>
+        <li>Terminales</li>
+        <li>Clientes</li>
+        <li>Tarjetas</li>
+        <li>Transacciones</li>
+        <li>Contracargos</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="small">Preguntas que iremos resolviendo</h3>
+      <ul class="check tiny">
+        <li>Cuanto vendio cada comercio este mes</li>
+        <li>Esta tarjeta se sale de su patron habitual</li>
+        <li>Cuantos intentos lleva esta tarjeta en un minuto</li>
+        <li>Como evoluciono el ticket promedio en dos anos</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot">SESION 1.1 - CASO</div>
+</section>
+
+<!-- DIAGRAMA 2: FLUJO -->
+<section>
+  <div class="kicker">El caso en operacion</div>
+  <h2>Recorrido de una autorizacion</h2>
+  <div class="fig alto"><img src="c1_s1_d2_flujo_autorizacion.png" alt="Flujo de autorizacion de un pago"></div>
+  <div class="cap">Figura 2. Cada paso del flujo corresponde a un capitulo del curso</div>
+  <div class="foot">SESION 1.1 - FLUJO</div>
+</section>
+
+<!-- SQLITE -->
+<section>
+  <div class="kicker">Motor de la sesion</div>
+  <h2>SQLite: base de datos en un archivo</h2>
+  <p class="small">SQLite es un motor embebido. La base completa reside en un solo
+  archivo y el codigo de la aplicacion la abre de forma directa, sin proceso servidor
+  ni administracion de servicio.</p>
+  <table class="gt">
+    <tr><th>Caracteristica</th><th>Implicacion practica</th></tr>
+    <tr><td>Motor embebido</td><td>Sin instalacion ni configuracion de red</td></tr>
+    <tr><td>Incluido en Python</td><td>El modulo <code>sqlite3</code> viene en la biblioteca estandar</td></tr>
+    <tr><td>Archivo unico</td><td>La base se copia, se versiona y se comparte como cualquier archivo</td></tr>
+    <tr><td>SQL estandar</td><td>Lo aprendido aqui aplica en PostgreSQL con ajustes menores</td></tr>
+    <tr><td>Escritura de un proceso a la vez</td><td>No adecuado para concurrencia de escritura alta</td></tr>
+  </table>
+  <div class="box small">
+    Es el motor correcto para iniciar el curso porque elimina toda friccion de
+    instalacion y permite concentrar la sesion en el modelo de datos.
+  </div>
+  <div class="foot">SESION 1.1 - SQLITE</div>
+</section>
+
+<!-- DIAGRAMA 3: DBAPI -->
+<section>
+  <div class="kicker">Como se conecta Python</div>
+  <h2>La interfaz DB-API 2.0</h2>
+  <div class="fig alto"><img src="c1_s1_d3_python_dbapi.png" alt="Interfaz DB-API entre Python y el motor"></div>
+  <div class="cap">Figura 3. La misma secuencia de llamadas sirve para SQLite y para PostgreSQL</div>
+  <div class="foot">SESION 1.1 - DB-API</div>
+</section>
+
+<!-- CODIGO 1 -->
+<section>
+  <div class="kicker">Demostracion</div>
+  <h2>La secuencia minima</h2>
+  <pre><code class="language-python">import sqlite3
+
+conexion = sqlite3.connect("pagos.db")
+cursor = conexion.cursor()
+
+cursor.execute("SELECT COUNT(*) FROM movimientos")
+total = cursor.fetchone()[0]
+print(f"Transacciones en la base: {total}")
+
+conexion.close()</code></pre>
+  <div class="box small">
+    Cuatro pasos: abrir la conexion, obtener un cursor, ejecutar la sentencia y
+    recuperar el resultado. La misma estructura se repite en la sesion 2.1 con
+    <code>psycopg</code> y una cadena de conexion distinta.
+  </div>
+  <div class="foot">SESION 1.1 - DEMOSTRACION</div>
+</section>
+
+<!-- CODIGO 2: PARAMETROS -->
+<section>
+  <div class="kicker">Practica obligatoria del curso</div>
+  <h2>Los valores se pasan como parametros</h2>
+  <pre><code class="language-python"># Forma correcta
+cursor.execute(
+    "SELECT COUNT(*) FROM movimientos WHERE ciudad_comercio = ? AND monto >= ?",
+    (ciudad, monto_minimo),
+)
+
+# Forma incorrecta: el valor se convierte en parte de la instruccion
+cursor.execute(
+    "SELECT COUNT(*) FROM movimientos WHERE ciudad_comercio = '" + ciudad + "'"
+)</code></pre>
+  <div class="box warn small">
+    En la segunda forma, un valor construido con intencion puede alterar la sentencia
+    ejecutada. Es el mecanismo de la inyeccion de codigo SQL, tratado a detalle en la
+    sesion 2.1.
+  </div>
+  <div class="box key small">
+    El taller evalua el uso de parametros. Un resultado correcto obtenido por
+    concatenacion recibe calificacion parcial.
+  </div>
+  <div class="foot">SESION 1.1 - PARAMETROS</div>
+</section>
+
+<!-- EL PROBLEMA -->
+<section>
+  <div class="kicker">Hallazgo de la sesion</div>
+  <h2>Los datos llegan en una sola tabla</h2>
+  <p class="small">El extracto operativo del caso contiene quince columnas en una tabla
+  unica llamada <code>movimientos</code>. Al agrupar por comercio, el resultado revela
+  un problema:</p>
+  <table class="gt">
+    <tr><th>Valor en la columna comercio</th><th class="n">Operaciones</th></tr>
+    <tr><td>Super Norteno</td><td class="n">521</td></tr>
+    <tr><td>Super Nortenio</td><td class="n">513</td></tr>
+    <tr><td>SUPER NORTENO</td><td class="n">490</td></tr>
+    <tr><td>CAFE AURORA</td><td class="n">451</td></tr>
+    <tr><td>Cafe Aurora</td><td class="n">432</td></tr>
+  </table>
+  <div class="box warn small">
+    La columna registra diecisiete valores distintos para siete comercios reales.
+    Toda agregacion sobre esa columna produce un resultado incorrecto.
+  </div>
+  <div class="foot">SESION 1.1 - HALLAZGO</div>
+</section>
+
+<!-- CIERRE Y PUENTE -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>Cuatro familias de bases de datos, cada una con una exigencia dominante</li>
+    <li>La ficha de seis puntos como metodo de comparacion acumulativa</li>
+    <li>La interfaz DB-API como forma unica de acceso desde Python</li>
+    <li>El uso de parametros como practica obligatoria del curso</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que abre la sesion 1.2:</strong> que estructura de datos impide
+    que un mismo comercio quede registrado bajo tres escrituras distintas dentro de la
+    misma base.
+  </div>
+  <div class="box small">
+    Trabajo para la proxima sesion: completar la ficha de seis puntos de SQLite y
+    entregar las partes A, B y C del taller.
+  </div>
+  <div class="foot">SESION 1.1 - CIERRE</div>
+</section>
+
+<!-- MATERIALES -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c1_s1_b0_diagramas.py</code></td><td>Generacion de las tres figuras de la sesion</td></tr>
+    <tr><td><code>c1_s1_b1_instalacion.md</code></td><td>Preparacion del entorno y lista de verificacion</td></tr>
+    <tr><td><code>c1_s1_b2_generar_datos.py</code></td><td>Generador del caso de estudio, semilla 987654</td></tr>
+    <tr><td><code>c1_s1_b3_primer_contacto.py</code></td><td>Demostracion guiada de la interfaz DB-API</td></tr>
+    <tr><td><code>c1_s1_b4_consultas.sql</code></td><td>Consultas de la sesion, en cuatro bloques</td></tr>
+    <tr><td><code>c1_s1_b5_taller.md</code></td><td>Taller evaluable y criterios de calificacion</td></tr>
+  </table>
+  <div class="box small mt">
+    La semilla del generador es <code>987654</code> en todas las rutas de ejecucion, de
+    modo que los datos son identicos para todos los participantes.
+  </div>
+  <div class="foot">SESION 1.1 - MATERIALES</div>
+</section>
+
+<!-- FINAL -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">1.2 Modelado y<br>normalizacion</div>
+    <div class="sub">De una tabla con quince columnas a un modelo de seis entidades</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>
