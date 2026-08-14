@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 1.2 - Modelado y normalizacion</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.32em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- PORTADA -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 1 - Sesion 1.2</div>
+    <div class="big">Modelado y<br>normalizacion</div>
+    <div class="sub">De una tabla con quince columnas a un modelo de seis entidades</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- RECUPERACION -->
+<section>
+  <div class="kicker">De donde venimos</div>
+  <h2>Lo que quedo abierto en la sesion 1.1</h2>
+  <p class="small">La consulta que agrupa por comercio devolvio un resultado
+  incorrecto, porque un mismo comercio esta registrado bajo varias escrituras.</p>
+  <table class="gt">
+    <tr><th>Valor en la columna comercio</th><th class="n">Operaciones</th></tr>
+    <tr><td>Super Norteno</td><td class="n">521</td></tr>
+    <tr><td>Super Nortenio</td><td class="n">513</td></tr>
+    <tr><td>SUPER NORTENO</td><td class="n">490</td></tr>
+  </table>
+  <div class="box warn small">
+    Diecisiete valores distintos para siete comercios reales.
+  </div>
+  <div class="box key small">
+    <strong>Pregunta de esta sesion:</strong> que estructura impide que un mismo
+    comercio quede registrado bajo tres escrituras distintas.
+  </div>
+  <div class="foot">SESION 1.2 - RECUPERACION</div>
+</section>
+
+<!-- AGENDA -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">10</td><td>Los tres niveles de modelado</td><td>Exposicion</td></tr>
+    <tr><td class="n">20</td><td>Modelo conceptual y logico del caso</td><td>Exposicion</td></tr>
+    <tr><td class="n">20</td><td>Del modelo al DDL: llaves y restricciones</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller de modelado y migracion</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Revision en vivo y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 1.2 - AGENDA</div>
+</section>
+
+<!-- TRES NIVELES -->
+<section>
+  <div class="kicker">Marco de trabajo</div>
+  <h2>Tres niveles de modelado</h2>
+  <table class="gt">
+    <tr><th>Nivel</th><th>Pregunta que responde</th><th>Producto</th></tr>
+    <tr><td><strong>Conceptual</strong></td><td>Que cosas existen en el negocio y como se relacionan</td><td>Diagrama de entidades y cardinalidades</td></tr>
+    <tr><td><strong>Logico</strong></td><td>Que atributos tiene cada entidad y que la identifica</td><td>Atributos, llaves primarias y foraneas</td></tr>
+    <tr><td><strong>Fisico</strong></td><td>Como se implementa en un motor concreto</td><td>Archivo DDL con tipos y restricciones</td></tr>
+  </table>
+  <div class="box small mt">
+    El nivel conceptual es independiente del motor. El nivel fisico cambia entre
+    SQLite, PostgreSQL y cualquier otro motor relacional. Esa separacion permite
+    reutilizar el trabajo de modelado cuando cambia la tecnologia.
+  </div>
+  <div class="box key small">
+    El error frecuente consiste en iniciar por el nivel fisico, escribiendo tablas
+    antes de haber decidido que entidades existen.
+  </div>
+  <div class="foot">SESION 1.2 - NIVELES</div>
+</section>
+
+<!-- DIAGRAMA 1 -->
+<section>
+  <div class="kicker">Nivel conceptual</div>
+  <h2>Que entidades existen</h2>
+  <div class="fig alto"><img src="c1_s2_d1_modelo_conceptual.png" alt="Modelo conceptual del caso"></div>
+  <div class="cap">Figura 1. Seis entidades y sus cardinalidades, sin atributos ni tipos</div>
+  <div class="foot">SESION 1.2 - CONCEPTUAL</div>
+</section>
+
+<!-- NORMALIZACION -->
+<section>
+  <div class="kicker">Criterio de descomposicion</div>
+  <h2>Las tres primeras formas normales</h2>
+  <table class="gt">
+    <tr><th>Forma</th><th>Regla</th><th>Caso en el archivo plano</th></tr>
+    <tr><td>Primera</td><td>Cada celda contiene un solo valor</td><td>Se cumple: el extracto ya es atomico</td></tr>
+    <tr><td>Segunda</td><td>Ningun atributo depende de parte de la llave</td><td>La ciudad depende del comercio, no de la transaccion</td></tr>
+    <tr><td>Tercera</td><td>Ningun atributo depende de otro atributo no llave</td><td>La categoria depende del comercio, no de la operacion</td></tr>
+  </table>
+  <div class="box small mt">
+    El resultado practico de aplicarlas es que cada dato reside en un solo lugar.
+    El correo de un cliente deja de repetirse en cada una de sus operaciones.
+  </div>
+  <div class="box key small">
+    Consecuencia directa: corregir un dato pasa de modificar cientos de filas a
+    modificar una sola.
+  </div>
+  <div class="foot">SESION 1.2 - NORMALIZACION</div>
+</section>
+
+<!-- DIAGRAMA 3 -->
+<section>
+  <div class="kicker">El recorrido</div>
+  <h2>Del archivo plano al modelo</h2>
+  <div class="fig alto"><img src="c1_s2_d3_proceso_normalizacion.png" alt="Proceso de normalizacion"></div>
+  <div class="cap">Figura 2. Cuatro etapas, correspondientes a las funciones del script de migracion</div>
+  <div class="foot">SESION 1.2 - PROCESO</div>
+</section>
+
+<!-- LLAVES NATURALES -->
+<section>
+  <div class="kicker">Decision de modelado</div>
+  <h2>Que identifica de forma univoca a cada entidad</h2>
+  <table class="gt">
+    <tr><th>Entidad</th><th>Llave natural</th><th>Por que no otra</th></tr>
+    <tr><td>Comercio</td><td>Nombre normalizado</td><td>Un mismo nombre no puede designar dos comercios</td></tr>
+    <tr><td>Cliente</td><td>Correo</td><td>El nombre se repite entre personas distintas</td></tr>
+    <tr><td>Tarjeta</td><td>Cliente mas ultimos cuatro digitos</td><td>Los cuatro digitos se repiten entre clientes</td></tr>
+    <tr><td>Terminal</td><td>Comercio mas codigo</td><td>El codigo se repite entre comercios de la misma ciudad</td></tr>
+  </table>
+  <div class="box warn small">
+    La fila de terminal es contraintuitiva y hay que comprobarla en los datos. Una
+    llave declarada solo sobre el codigo fusiona terminales de comercios distintos
+    y atribuye transacciones al comercio equivocado.
+  </div>
+  <div class="foot">SESION 1.2 - LLAVES</div>
+</section>
+
+<!-- DIAGRAMA 2 -->
+<section>
+  <div class="kicker">Nivel logico</div>
+  <h2>Atributos, llaves y restricciones</h2>
+  <div class="fig alto"><img src="c1_s2_d2_modelo_logico.png" alt="Modelo logico con llaves"></div>
+  <div class="cap">Figura 3. El modelo logico corresponde linea por linea con el archivo DDL</div>
+  <div class="foot">SESION 1.2 - LOGICO</div>
+</section>
+
+<!-- DDL 1 -->
+<section>
+  <div class="kicker">Nivel fisico</div>
+  <h2>La restriccion que resuelve el problema</h2>
+  <pre><code class="language-sql">CREATE TABLE comercios (
+    id_comercio INTEGER PRIMARY KEY,
+    nombre      TEXT NOT NULL UNIQUE,
+    categoria   TEXT NOT NULL,
+    ciudad      TEXT NOT NULL
+);</code></pre>
+  <div class="box key small">
+    <code>UNIQUE</code> sobre el nombre es lo que impide que reaparezcan las
+    diecisiete variantes de escritura. La regla queda declarada en la estructura y
+    el motor la aplica en toda escritura, venga de donde venga.
+  </div>
+  <div class="box small">
+    Una funcion de limpieza en el codigo de carga resuelve el caso presente. Una
+    variante de escritura nueva volveria a producir duplicados, porque esa funcion
+    solo actua durante la carga.
+  </div>
+  <div class="foot">SESION 1.2 - DDL</div>
+</section>
+
+<!-- DDL 2 -->
+<section>
+  <div class="kicker">Nivel fisico</div>
+  <h2>Llave compuesta y llave foranea</h2>
+  <pre><code class="language-sql">CREATE TABLE terminales (
+    id_terminal INTEGER PRIMARY KEY,
+    id_comercio INTEGER NOT NULL,
+    codigo      TEXT NOT NULL,
+    UNIQUE (id_comercio, codigo),
+    FOREIGN KEY (id_comercio) REFERENCES comercios (id_comercio)
+);</code></pre>
+  <div class="box small">
+    <code>UNIQUE (id_comercio, codigo)</code> declara que el codigo es unico dentro
+    del comercio. <code>FOREIGN KEY</code> impide registrar una terminal de un
+    comercio que no existe.
+  </div>
+  <div class="box warn small">
+    En SQLite, las llaves foraneas no se aplican de forma predeterminada.
+    <code>PRAGMA foreign_keys = ON</code> debe emitirse en cada conexion.
+  </div>
+  <div class="foot">SESION 1.2 - DDL</div>
+</section>
+
+<!-- DDL 3 -->
+<section>
+  <div class="kicker">Nivel fisico</div>
+  <h2>Restricciones de dominio</h2>
+  <pre><code class="language-sql">CREATE TABLE transacciones (
+    id_transaccion TEXT PRIMARY KEY,
+    fecha_hora     TEXT NOT NULL,
+    id_terminal    INTEGER NOT NULL,
+    id_tarjeta     INTEGER NOT NULL,
+    monto          REAL NOT NULL CHECK (monto > 0),
+    moneda         TEXT NOT NULL DEFAULT 'MXN',
+    estatus        TEXT NOT NULL
+                   CHECK (estatus IN ('APROBADA','RECHAZADA','REVERSADA')),
+    FOREIGN KEY (id_terminal) REFERENCES terminales (id_terminal),
+    FOREIGN KEY (id_tarjeta)  REFERENCES tarjetas (id_tarjeta)
+);</code></pre>
+  <div class="box key small">
+    <code>CHECK</code> limita el conjunto de valores admitidos. Un estatus mal
+    escrito deja de ser posible, sin que ninguna aplicacion tenga que validarlo.
+  </div>
+  <div class="foot">SESION 1.2 - DDL</div>
+</section>
+
+<!-- RESULTADO -->
+<section>
+  <div class="kicker">Resultado de la migracion</div>
+  <h2>La misma consulta, ahora correcta</h2>
+  <div class="two">
+    <div>
+      <h3 class="small">Antes: columna comercio</h3>
+      <table class="gt tight">
+        <tr><td>Super Norteno</td><td class="n">521</td></tr>
+        <tr><td>Super Nortenio</td><td class="n">513</td></tr>
+        <tr><td>SUPER NORTENO</td><td class="n">490</td></tr>
+        <tr><td>CAFE AURORA</td><td class="n">451</td></tr>
+        <tr><td>Cafe Aurora</td><td class="n">432</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 class="small">Despues: catalogo de comercios</h3>
+      <table class="gt tight">
+        <tr><td>Super Norteno</td><td class="n">1524</td></tr>
+        <tr><td>Farmacia Del Sol</td><td class="n">1080</td></tr>
+        <tr><td>Cafe Aurora</td><td class="n">883</td></tr>
+        <tr><td>Boutique Iris</td><td class="n">610</td></tr>
+        <tr><td>Gasolinera Km 12</td><td class="n">497</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="box key small mt">
+    Siete comercios, cinco mil transacciones, cero perdida de informacion.
+    <code>PRAGMA foreign_key_check</code> devuelve cero filas.
+  </div>
+  <div class="foot">SESION 1.2 - RESULTADO</div>
+</section>
+
+<!-- HALLAZGOS -->
+<section>
+  <div class="kicker">Lo que el modelado dejo al descubierto</div>
+  <h2>Tres hallazgos del ejercicio</h2>
+  <table class="gt">
+    <tr><th class="n">N.</th><th>Hallazgo</th><th>Consecuencia</th></tr>
+    <tr><td class="n">1</td><td>Cuatro codigos de terminal se repiten entre dos comercios distintos</td><td>La llave natural de terminal es compuesta</td></tr>
+    <tr><td class="n">2</td><td>Varios clientes comparten nombre, hasta cinco en un caso</td><td>El correo, y no el nombre, identifica al cliente</td></tr>
+    <tr><td class="n">3</td><td>El origen registra el contracargo sin fecha</td><td>No es posible medir tiempos de disputa</td></tr>
+  </table>
+  <div class="box small mt">
+    Ninguno de los tres era visible en el archivo plano. El ejercicio de modelado
+    es tambien un ejercicio de diagnostico de la calidad del dato de origen.
+  </div>
+  <div class="foot">SESION 1.2 - HALLAZGOS</div>
+</section>
+
+<!-- CIERRE -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>Tres niveles de modelado, del negocio al motor</li>
+    <li>La llave natural como decision, comprobada en los datos</li>
+    <li>La restriccion declarada en la estructura, no en el codigo de carga</li>
+    <li>El modelado como diagnostico de la calidad del origen</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que abre el capitulo 2:</strong> el modelo resuelve la
+    integridad, pero el motor sigue operando sobre un archivo unico con un solo
+    escritor a la vez. Que ocurre cuando varias terminales registran operaciones
+    de forma simultanea.
+  </div>
+  <div class="box small">
+    Trabajo para la proxima sesion: completar la ficha de seis puntos del modelo
+    relacional y entregar las partes A a D del taller.
+  </div>
+  <div class="foot">SESION 1.2 - CIERRE</div>
+</section>
+
+<!-- MATERIALES -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c1_s2_b0_diagramas.py</code></td><td>Render de las tres figuras, PlantUML y diagrams</td></tr>
+    <tr><td><code>c1_s2_b1_preparacion.md</code></td><td>Requisitos previos y verificacion del punto de partida</td></tr>
+    <tr><td><code>c1_s2_b2_ddl_modelo.sql</code></td><td>Definicion de las seis tablas con restricciones</td></tr>
+    <tr><td><code>c1_s2_b3_migracion.py</code></td><td>Migracion del archivo plano en cuatro etapas</td></tr>
+    <tr><td><code>c1_s2_b4_verificacion.sql</code></td><td>Comprobaciones de integridad y hallazgos</td></tr>
+    <tr><td><code>c1_s2_b5_taller.md</code></td><td>Taller evaluable y criterios de calificacion</td></tr>
+    <tr><td><code>c1_s2_b7_guia_uso.md</code></td><td>Guia de uso para el instructor</td></tr>
+  </table>
+  <div class="foot">SESION 1.2 - MATERIALES</div>
+</section>
+
+<!-- FINAL -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">2.1 PostgreSQL<br>y Python</div>
+    <div class="sub">Del archivo unico al servidor: contenedores, psycopg y credenciales</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>

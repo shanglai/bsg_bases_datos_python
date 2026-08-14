@@ -1,0 +1,110 @@
+@startuml c1_s2_d2_modelo_logico
+' ---------------------------------------------------------------
+' c1_s2_d2_modelo_logico.puml
+' Sesion 1.2: modelo logico y fisico del caso de estudio
+'
+' Nivel logico y fisico: atributos, llaves primarias, llaves
+' foraneas, tipos de dato y restricciones. Corresponde de forma
+' directa al archivo c1_s2_b2_ddl_modelo.sql
+'
+' Render: java -jar plantuml.jar c1_s2_d2_modelo_logico.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #004BB7
+  HeaderBackgroundColor #E8EEF8
+  FontColor #1C2733
+}
+skinparam ArrowColor #56646F
+skinparam ArrowFontColor #56646F
+skinparam ArrowFontSize 11
+
+title Modelo logico: seis entidades con llaves y restricciones
+
+entity "clientes" as clientes {
+  * id_cliente : INTEGER <<PK>>
+  --
+  * nombre : TEXT
+  * correo : TEXT <<UNIQUE>>
+}
+
+entity "tarjetas" as tarjetas {
+  * id_tarjeta : INTEGER <<PK>>
+  --
+  * id_cliente : INTEGER <<FK>>
+  * ultimos4 : TEXT
+  * marca : TEXT <<CHECK>>
+}
+
+entity "comercios" as comercios {
+  * id_comercio : INTEGER <<PK>>
+  --
+  * nombre : TEXT <<UNIQUE>>
+  * categoria : TEXT
+  * ciudad : TEXT
+}
+
+entity "terminales" as terminales {
+  * id_terminal : INTEGER <<PK>>
+  --
+  * id_comercio : INTEGER <<FK>>
+  * codigo : TEXT
+  --
+  <<UNIQUE (id_comercio, codigo)>>
+}
+
+entity "transacciones" as transacciones {
+  * id_transaccion : TEXT <<PK>>
+  --
+  * fecha_hora : TEXT
+  * id_terminal : INTEGER <<FK>>
+  * id_tarjeta : INTEGER <<FK>>
+  * monto : REAL <<CHECK > 0>>
+  * moneda : TEXT
+  * estatus : TEXT <<CHECK>>
+  * metodo_captura : TEXT <<CHECK>>
+}
+
+entity "contracargos" as contracargos {
+  * id_contracargo : INTEGER <<PK>>
+  --
+  * id_transaccion : TEXT <<FK, UNIQUE>>
+  fecha_contracargo : TEXT
+}
+
+clientes ||--o{ tarjetas
+comercios ||--o{ terminales
+tarjetas ||--o{ transacciones
+terminales ||--o{ transacciones
+transacciones ||--o| contracargos
+
+note right of comercios
+  El nombre es unico.
+  Esa restriccion es la que
+  impide que reaparezcan las
+  diecisiete variantes de
+  escritura del archivo plano.
+end note
+
+note left of terminales
+  El codigo NO es unico por si solo:
+  se repite entre comercios de la
+  misma ciudad. La llave natural es
+  compuesta por comercio y codigo.
+end note
+
+note bottom of contracargos
+  fecha_contracargo admite nulo:
+  el archivo plano de origen no
+  conserva ese dato. La perdida
+  de informacion es un hallazgo
+  del modelado.
+end note
+
+@enduml
