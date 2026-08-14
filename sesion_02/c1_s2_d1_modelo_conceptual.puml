@@ -1,0 +1,54 @@
+@startuml c1_s2_d1_modelo_conceptual
+' ---------------------------------------------------------------
+' c1_s2_d1_modelo_conceptual.puml
+' Sesion 1.2: modelo conceptual del caso de estudio
+'
+' Nivel conceptual: entidades del negocio y sus relaciones.
+' No incluye atributos, llaves ni tipos de dato. Responde a la
+' pregunta de que cosas existen y como se vinculan entre si.
+'
+' Render: java -jar plantuml.jar c1_s2_d1_modelo_conceptual.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam linetype ortho
+skinparam entity {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+skinparam ArrowColor #56646F
+skinparam ArrowFontColor #56646F
+skinparam ArrowFontSize 12
+
+title Modelo conceptual: procesadora de pagos
+
+entity "CLIENTE" as cliente
+entity "TARJETA" as tarjeta
+entity "COMERCIO" as comercio
+entity "TERMINAL" as terminal
+entity "TRANSACCION" as transaccion
+entity "CONTRACARGO" as contracargo
+
+cliente ||--o{ tarjeta : "es titular de"
+tarjeta ||--o{ transaccion : "origina"
+comercio ||--o{ terminal : "opera"
+terminal ||--o{ transaccion : "captura"
+transaccion ||--o| contracargo : "puede recibir"
+
+note bottom of contracargo
+  Un contracargo existe solo si
+  existe la transaccion que lo motiva.
+  Es una relacion de cero o uno.
+end note
+
+note bottom of transaccion
+  Entidad central del modelo.
+  Recibe la llave foranea de
+  tarjeta y de terminal.
+end note
+
+@enduml
