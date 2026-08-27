@@ -1,0 +1,58 @@
+@startuml c2_s1_d3_parametros
+' ---------------------------------------------------------------
+' c2_s1_d3_parametros.puml
+' Sesion 2.1: por que el parametro previene la inyeccion
+'
+' Contrasta las dos rutas que puede seguir un valor recibido
+' desde afuera antes de llegar al motor.
+'
+' Render: java -jar plantuml.jar c2_s1_d3_parametros.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam sequence {
+  ArrowColor #56646F
+  LifeLineBorderColor #004BB7
+  ParticipantBorderColor #004BB7
+  ParticipantBackgroundColor #F3F7FD
+  ParticipantFontColor #1C2733
+  GroupBackgroundColor #E8EEF8
+  GroupBorderColor #004BB7
+}
+
+title Dos rutas para un valor recibido desde afuera
+
+actor "Origen\nexterno" as origen
+participant "Codigo\nPython" as py
+participant "psycopg" as drv
+database "PostgreSQL" as pg
+
+group Ruta por concatenacion
+  origen -> py : ciudad = "Merida' OR '1'='1"
+  py -> py : arma una sola cadena\ncon el valor dentro
+  py -> drv : "...WHERE ciudad =\n'Merida' OR '1'='1'"
+  drv -> pg : una sola cadena
+  pg -> pg : analiza la cadena completa\ncomo instruccion
+  pg --> py : 7 filas\nel filtro dejo de aplicarse
+end
+
+group Ruta por parametro
+  origen -> py : ciudad = "Merida' OR '1'='1"
+  py -> drv : sentencia con %s\n+ valor por separado
+  drv -> pg : sentencia
+  drv -> pg : valor
+  pg -> pg : analiza solo la sentencia\ny usa el valor como dato
+  pg --> py : 0 filas\nno existe esa ciudad
+end
+
+note over pg
+  El motor nunca ve el valor
+  como parte de la instruccion.
+  La separacion ocurre en el
+  protocolo, no en el texto.
+end note
+
+@enduml

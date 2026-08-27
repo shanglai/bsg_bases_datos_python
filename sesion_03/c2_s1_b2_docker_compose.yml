@@ -1,0 +1,51 @@
+# =====================================================================
+# c2_s1_b2_docker_compose.yml
+# Sesion 2.1: entorno de PostgreSQL para el curso
+#
+# Levantar:   docker compose -f c2_s1_b2_docker_compose.yml up -d
+# Estado:     docker compose -f c2_s1_b2_docker_compose.yml ps
+# Bitacora:   docker compose -f c2_s1_b2_docker_compose.yml logs -f
+# Detener:    docker compose -f c2_s1_b2_docker_compose.yml down
+# Borrar todo: docker compose -f c2_s1_b2_docker_compose.yml down -v
+#
+# Las credenciales se leen del archivo .env, que no se versiona.
+# Ver c2_s1_b2_env_ejemplo.txt
+# =====================================================================
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: curso_postgres
+
+    environment:
+      # Estos valores provienen del archivo .env del directorio actual.
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      # Configuracion regional de la base creada al inicializar.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+
+    ports:
+      # Formato puerto_del_equipo:puerto_del_contenedor
+      # Si el equipo ya tiene un PostgreSQL en el 5432, cambiar el
+      # primer numero a 5433 y ajustar PGPORT en el archivo .env.
+      - "${PGPORT:-5432}:5432"
+
+    volumes:
+      # El volumen conserva los datos aunque el contenedor se elimine.
+      # Sin el, cada reinicio partiria de una base vacia.
+      - pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      # Permite saber cuando el servidor acepta conexiones. El
+      # contenedor arranca en segundos, pero el servidor tarda un poco
+      # mas en estar listo.
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+volumes:
+  pgdata:
