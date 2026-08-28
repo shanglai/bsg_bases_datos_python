@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 2.1 - PostgreSQL y Python</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 PORTADA -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 2 - Sesion 2.1</div>
+    <div class="big">PostgreSQL<br>y Python</div>
+    <div class="sub">Del archivo unico al servidor: contenedores, psycopg y credenciales</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 RECUPERACION -->
+<section>
+  <div class="kicker">De donde venimos</div>
+  <h2>Lo que quedo abierto en la sesion 1.2</h2>
+  <p class="small">El modelo normalizado resolvio la integridad de los datos. El
+  motor, sin embargo, conserva una limitacion: SQLite opera sobre un archivo unico
+  y admite un solo escritor a la vez.</p>
+  <div class="box warn small">
+    Pregunta de esta sesion: que ocurre cuando varias terminales registran
+    operaciones de forma simultanea.
+  </div>
+  <div class="box key small">
+    La respuesta implica cambiar de arquitectura. Un servidor se interpone entre
+    los clientes y el disco, y coordina los accesos.
+  </div>
+  <div class="foot">SESION 2.1 - RECUPERACION</div>
+</section>
+
+<!-- 3 AGENDA -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">15</td><td>Del motor embebido al servidor. El contenedor</td><td>Exposicion</td></tr>
+    <tr><td class="n">15</td><td>El modelo traducido a PostgreSQL. Tipos reales</td><td>Demostracion</td></tr>
+    <tr><td class="n">20</td><td>psycopg, credenciales y parametros</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller sobre el entorno cargado</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Carga en vivo, revision y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 2.1 - AGENDA</div>
+</section>
+
+<!-- 4 DIAGRAMA 1 -->
+<section>
+  <div class="kicker">Cambio de arquitectura</div>
+  <h2>Un proceso frente a un servidor</h2>
+  <div class="fig alto"><img src="c2_s1_d1_embebido_vs_servidor.png" alt="Motor embebido frente a servidor"></div>
+  <div class="cap">Figura 1. El servidor es el unico proceso que toca el disco, y coordina a los clientes</div>
+  <div class="foot">SESION 2.1 - ARQUITECTURA</div>
+</section>
+
+<!-- 5 COMPARATIVA -->
+<section>
+  <div class="kicker">Ficha de seis puntos</div>
+  <h2>SQLite frente a PostgreSQL</h2>
+  <table class="gt">
+    <tr><th>Punto</th><th>SQLite</th><th>PostgreSQL</th></tr>
+    <tr><td>Modelo de datos</td><td>Relacional</td><td>Relacional</td></tr>
+    <tr><td>Concurrencia de escritura</td><td>Un escritor a la vez</td><td>Multiples escritores coordinados</td></tr>
+    <tr><td>Tipado</td><td>Dinamico, por valor</td><td>Estricto, por columna</td></tr>
+    <tr><td>Llaves foraneas</td><td>Requieren activarse por conexion</td><td>Se aplican siempre</td></tr>
+    <tr><td>Despliegue</td><td>Un archivo, sin servicio</td><td>Servicio con puerto y credenciales</td></tr>
+    <tr><td>Cuando conviene</td><td>Aplicacion local, prototipo, prueba</td><td>Sistema con varios usuarios y operacion continua</td></tr>
+  </table>
+  <div class="box small mt">
+    Dos de los seis puntos permanecen iguales. El modelo relacional del capitulo 1
+    se traslada sin cambios conceptuales.
+  </div>
+  <div class="foot">SESION 2.1 - COMPARATIVA</div>
+</section>
+
+<!-- 6 DIAGRAMA 2 -->
+<section>
+  <div class="kicker">El entorno de trabajo</div>
+  <h2>Que levanta el archivo de composicion</h2>
+  <div class="fig alto"><img src="c2_s1_d2_contenedor.png" alt="El contenedor de PostgreSQL"></div>
+  <div class="cap">Figura 2. Dos clientes distintos, un servidor, un volumen que conserva los datos</div>
+  <div class="foot">SESION 2.1 - CONTENEDOR</div>
+</section>
+
+<!-- 7 COMPOSE -->
+<section>
+  <div class="kicker">Tres piezas del archivo</div>
+  <h2>Puerto, volumen y credenciales</h2>
+  <pre><code class="language-yaml">services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${PGPORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data</code></pre>
+  <table class="gt tight">
+    <tr><td><code>ports</code></td><td>Expone el servidor al equipo. Primer numero: puerto local</td></tr>
+    <tr><td><code>volumes</code></td><td>Conserva los datos aunque el contenedor se elimine</td></tr>
+    <tr><td><code>environment</code></td><td>Toma los valores del archivo <code>.env</code>, no del archivo de composicion</td></tr>
+  </table>
+  <div class="foot">SESION 2.1 - COMPOSICION</div>
+</section>
+
+<!-- 8 TIPOS -->
+<section>
+  <div class="kicker">El modelo traducido</div>
+  <h2>Cinco diferencias de tipo</h2>
+  <table class="gt">
+    <tr><th>Columna</th><th>SQLite</th><th>PostgreSQL</th></tr>
+    <tr><td>Identidad</td><td><code>INTEGER PRIMARY KEY</code></td><td><code>GENERATED ALWAYS AS IDENTITY</code></td></tr>
+    <tr><td>Texto</td><td><code>TEXT</code> sin limite aplicado</td><td><code>VARCHAR(n)</code> con limite real</td></tr>
+    <tr><td>Fecha</td><td><code>TEXT</code></td><td><code>TIMESTAMP</code></td></tr>
+    <tr><td>Importe</td><td><code>REAL</code></td><td><code>NUMERIC(12,2)</code></td></tr>
+    <tr><td>Llave foranea</td><td>Requiere <code>PRAGMA</code></td><td>Se aplica siempre</td></tr>
+  </table>
+  <div class="box warn small mt">
+    La cuarta fila es la de mayor consecuencia practica. El punto flotante no
+    representa de forma exacta valores como 0.10, de modo que no debe usarse para
+    importes monetarios.
+  </div>
+  <div class="foot">SESION 2.1 - TIPOS</div>
+</section>
+
+<!-- 9 NUMERIC -->
+<section>
+  <div class="kicker">Demostracion</div>
+  <h2>Diez centavos, dos resultados</h2>
+  <pre><code class="language-sql">SELECT SUM(v::float8)::text  AS suma_flotante,
+       SUM(v::numeric)::text AS suma_decimal
+FROM (VALUES (0.01),(0.01),(0.01),(0.01),(0.01),
+             (0.01),(0.01),(0.01),(0.01),(0.01)) AS t(v);</code></pre>
+  <table class="gt">
+    <tr><th>suma_flotante</th><th>suma_decimal</th></tr>
+    <tr><td><code>0.09999999999999999</code></td><td><code>0.10</code></td></tr>
+  </table>
+  <div class="box warn small mt">
+    Diez sumas bastan para que el error sea visible. La tabla del caso tiene cinco
+    mil importes, y en produccion tendria millones.
+  </div>
+  <div class="box key small">
+    Regla aplicable a todo sistema financiero: dinero en <code>NUMERIC</code>,
+    nunca en punto flotante. Del lado de Python, <code>Decimal</code>.
+  </div>
+  <div class="foot">SESION 2.1 - NUMERIC</div>
+</section>
+
+<!-- 10 CREDENCIALES -->
+<section>
+  <div class="kicker">Practica obligatoria</div>
+  <h2>La credencial fuera del codigo</h2>
+  <pre><code class="language-python">from dotenv import load_dotenv
+import os, psycopg
+
+load_dotenv()   # lee el archivo .env
+
+conexion = psycopg.connect(
+    f"host={os.getenv('PGHOST')} "
+    f"dbname={os.getenv('POSTGRES_DB')} "
+    f"user={os.getenv('POSTGRES_USER')} "
+    f"password={os.getenv('POSTGRES_PASSWORD')}"
+)</code></pre>
+  <table class="gt tight">
+    <tr><td><code>.env</code></td><td>Contiene los valores. No se versiona</td></tr>
+    <tr><td><code>env_ejemplo.txt</code></td><td>Documenta que variables hacen falta. Si se versiona</td></tr>
+  </table>
+  <div class="box small">
+    El archivo <code>.env</code> es el escalon mas basico. En operacion real, por
+    encima estan los servicios de gestion de secretos, que rotan credenciales y
+    registran cada acceso.
+  </div>
+  <div class="foot">SESION 2.1 - CREDENCIALES</div>
+</section>
+
+<!-- 11 INYECCION 1 -->
+<section>
+  <div class="kicker">El problema</div>
+  <h2>Cuando el valor deja de ser un dato</h2>
+  <pre><code class="language-python">ciudad = "Merida' OR '1'='1"
+
+consulta = "SELECT COUNT(*) FROM pagos.comercios WHERE ciudad = '" + ciudad + "'"</code></pre>
+  <p class="small">Lo que recibe el motor:</p>
+  <pre><code class="language-sql">SELECT COUNT(*) FROM pagos.comercios WHERE ciudad = 'Merida' OR '1'='1'</code></pre>
+  <div class="box warn small">
+    Resultado: 7 comercios. El filtro dejo de aplicarse y la consulta devuelve el
+    catalogo completo.
+  </div>
+  <div class="box small">
+    Con una entrada ordinaria la concatenacion funciona. Ese es el motivo de que el
+    error sobreviva tanto tiempo: durante las pruebas no falla.
+  </div>
+  <div class="foot">SESION 2.1 - INYECCION</div>
+</section>
+
+<!-- 12 DIAGRAMA 3 -->
+<section>
+  <div class="kicker">Por que el parametro lo resuelve</div>
+  <h2>Dos rutas para el mismo valor</h2>
+  <div class="fig alto"><img src="c2_s1_d3_parametros.png" alt="Concatenacion frente a parametro"></div>
+  <div class="cap">Figura 3. La separacion ocurre en el protocolo, no en el texto de la sentencia</div>
+  <div class="foot">SESION 2.1 - PARAMETROS</div>
+</section>
+
+<!-- 13 INYECCION 2 -->
+<section>
+  <div class="kicker">La solucion</div>
+  <h2>El mismo valor, pasado como parametro</h2>
+  <pre><code class="language-python">cursor.execute(
+    "SELECT COUNT(*) FROM pagos.comercios WHERE ciudad = %s",
+    (ciudad,),
+)</code></pre>
+  <table class="gt">
+    <tr><th>Valor recibido</th><th class="n">Resultado</th></tr>
+    <tr><td><code>Merida</code></td><td class="n">1</td></tr>
+    <tr><td><code>Merida' OR '1'='1</code></td><td class="n">0</td></tr>
+  </table>
+  <div class="box key small mt">
+    El segundo valor se busca de forma literal como nombre de ciudad. No existe
+    ninguna con ese nombre.
+  </div>
+  <div class="box warn small">
+    El marcador <code>%s</code> no es sustitucion de texto y no admite comillas
+    alrededor. Escribir <code>'%s'</code> reintroduce el problema.
+  </div>
+  <div class="foot">SESION 2.1 - PARAMETROS</div>
+</section>
+
+<!-- 14 LIMITE -->
+<section>
+  <div class="kicker">Limite del mecanismo</div>
+  <h2>Valores si, identificadores no</h2>
+  <p class="small">Los parametros sustituyen valores. Un nombre de tabla o de
+  columna no puede pasarse de esa forma, porque el motor necesita conocer la
+  estructura de la sentencia antes de recibir los valores.</p>
+  <pre><code class="language-python">from psycopg import sql
+
+consulta = sql.SQL(
+    "SELECT {campo}, COUNT(*) FROM pagos.comercios GROUP BY {campo}"
+).format(campo=sql.Identifier(columna))</code></pre>
+  <div class="box key small">
+    <code>sql.Identifier</code> valida y entrecomilla el nombre. Un valor
+    arbitrario no puede convertirse en instruccion.
+  </div>
+  <div class="foot">SESION 2.1 - IDENTIFICADORES</div>
+</section>
+
+<!-- 15 CARGA -->
+<section>
+  <div class="kicker">Carga del caso</div>
+  <h2>COPY y una sola transaccion</h2>
+  <pre><code class="language-python">with psycopg.connect(cadena_de_conexion()) as conexion:
+    with conexion.cursor() as cursor:
+        with cursor.copy("COPY pagos.transacciones (...) FROM STDIN") as copia:
+            for fila in filas:
+                copia.write_row((...))</code></pre>
+  <table class="gt tight">
+    <tr><td><code>COPY</code></td><td>Carga masiva. Reduce viajes entre cliente y servidor</td></tr>
+    <tr><td><code>with connect</code></td><td>Abre una transaccion. Confirma al salir, revierte ante error</td></tr>
+    <tr><td><code>RETURNING</code></td><td>Devuelve la identidad generada sin una segunda consulta</td></tr>
+  </table>
+  <div class="box small mt">
+    Las seis tablas se cargan dentro de una sola transaccion. Ante cualquier
+    error, la base queda como estaba.
+  </div>
+  <div class="foot">SESION 2.1 - CARGA</div>
+</section>
+
+<!-- 16 DBEAVER -->
+<section>
+  <div class="kicker">Cliente de trabajo</div>
+  <h2>DBeaver sobre el mismo servidor</h2>
+  <p class="small">DBeaver y el script de Python se conectan al mismo servidor y
+  al mismo tiempo. Esa coexistencia es la respuesta practica a la pregunta con la
+  que abrio la sesion.</p>
+  <table class="gt">
+    <tr><th>Uso</th><th>Donde ayuda</th></tr>
+    <tr><td>Navegador de objetos</td><td>Ver tablas, columnas, llaves e indices del esquema</td></tr>
+    <tr><td>Diagrama automatico</td><td>Contrastar el modelo real contra el diseñado en la sesion 1.2</td></tr>
+    <tr><td>Editor de consultas</td><td>Escribir y probar SQL antes de llevarlo a Python</td></tr>
+    <tr><td>Comentarios de objetos</td><td>Leer la documentacion que viaja dentro del modelo</td></tr>
+  </table>
+  <div class="box key small mt">
+    Criterio de trabajo del curso: explorar y probar en DBeaver, automatizar en
+    Python.
+  </div>
+  <div class="foot">SESION 2.1 - DBEAVER</div>
+</section>
+
+<!-- 17 CIERRE -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>Del motor embebido al servidor, con el contenedor como vehiculo</li>
+    <li>Tipos reales para fecha y para dinero</li>
+    <li>La credencial fuera del codigo fuente</li>
+    <li>El parametro como unica forma admitida de pasar valores</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que abre la sesion 2.2:</strong> los datos residen ahora en
+    seis tablas separadas. Responder una pregunta de negocio exige recomponerlos.
+    Como se consulta informacion que vive en varias tablas a la vez.
+  </div>
+  <div class="box small">
+    Trabajo para la proxima sesion: ficha de seis puntos de PostgreSQL y partes A
+    a D del taller.
+  </div>
+  <div class="foot">SESION 2.1 - CIERRE</div>
+</section>
+
+<!-- 18 MATERIALES -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt tight">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c2_s1_b0_diagramas.py</code></td><td>Render de las tres figuras</td></tr>
+    <tr><td><code>c2_s1_b1_preparacion.md</code></td><td>Docker, DBeaver y verificacion del entorno</td></tr>
+    <tr><td><code>c2_s1_b2_docker_compose.yml</code></td><td>Definicion del servicio de PostgreSQL</td></tr>
+    <tr><td><code>c2_s1_b2_env_ejemplo.txt</code></td><td>Plantilla del archivo de credenciales</td></tr>
+    <tr><td><code>c2_s1_b3_ddl_postgres.sql</code></td><td>El modelo de la sesion 1.2 traducido</td></tr>
+    <tr><td><code>c2_s1_b4_carga.py</code></td><td>Carga con psycopg, COPY y transaccion unica</td></tr>
+    <tr><td><code>c2_s1_b5_parametros.py</code></td><td>Inyeccion y consultas parametrizadas, seis bloques</td></tr>
+    <tr><td><code>c2_s1_b6_taller.md</code></td><td>Taller evaluable</td></tr>
+  </table>
+  <div class="foot">SESION 2.1 - MATERIALES</div>
+</section>
+
+<!-- 19 FINAL -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">2.2 Consulta<br>sobre varias tablas</div>
+    <div class="sub">Combinaciones, agregaciones y lectura hacia pandas y Polars</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>
