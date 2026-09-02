@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 2.2 - Consulta sobre varias tablas</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head><body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 PORTADA -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 2 - Sesion 2.2</div>
+    <div class="big">Consulta sobre<br>varias tablas</div>
+    <div class="sub">Combinaciones, agregaciones, subconsultas y lectura hacia dataframes</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 RECUPERACION -->
+<section>
+  <div class="kicker">De donde venimos</div>
+  <h2>La consecuencia de haber normalizado</h2>
+  <p class="small">La sesion 1.2 separo los datos en seis tablas para que cada dato
+  residiera en un solo lugar. La sesion 2.1 los llevo a PostgreSQL con esa
+  estructura intacta. El resultado es una tabla de hechos sin un solo nombre
+  legible.</p>
+  <pre><code class="language-sql">SELECT * FROM pagos.transacciones LIMIT 1;
+
+id_transaccion | fecha_hora          | id_terminal | id_tarjeta | monto
+TRX0000001     | 2026-04-12 09:33:07 |          14 |        102 | 1830.45</code></pre>
+  <div class="box warn small">
+    Pregunta de esta sesion: cuanto vendio cada comercio. Los datos necesarios
+    estan en tres tablas distintas.
+  </div>
+  <div class="foot">SESION 2.2 - RECUPERACION</div>
+</section>
+
+<!-- 3 AGENDA -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">20</td><td>Combinaciones: interna, externa y el error frecuente</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Agregaciones y orden logico de evaluacion</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Subconsultas y lectura hacia dataframes</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>El tipo al cruzar, revision y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 2.2 - AGENDA</div>
+</section>
+
+<!-- 4 DIAGRAMA 1 -->
+<section>
+  <div class="kicker">Combinaciones</div>
+  <h2>El recorrido de las llaves</h2>
+  <div class="fig alto"><img src="c2_s2_d1_join_recorrido.png" alt="Recorrido de una combinacion"></div>
+  <div class="cap">Figura 1. De la tabla de hechos al nombre del comercio y del cliente</div>
+  <div class="foot">SESION 2.2 - JOIN</div>
+</section>
+
+<!-- 5 JOIN -->
+<section>
+  <div class="kicker">Sintaxis</div>
+  <h2>La cadena de combinaciones</h2>
+  <pre><code class="language-sql">SELECT t.id_transaccion, c.nombre AS comercio, cl.nombre AS cliente, t.monto
+FROM pagos.transacciones t
+JOIN pagos.terminales te ON te.id_terminal = t.id_terminal
+JOIN pagos.comercios  c  ON c.id_comercio  = te.id_comercio
+JOIN pagos.tarjetas   ta ON ta.id_tarjeta  = t.id_tarjeta
+JOIN pagos.clientes   cl ON cl.id_cliente  = ta.id_cliente
+ORDER BY t.monto DESC;</code></pre>
+  <div class="box small">
+    Cada <code>JOIN</code> sigue una llave foranea declarada en la sesion 1.2. El
+    modelo no solo protege la integridad: tambien documenta por donde se recorre.
+  </div>
+  <div class="box key small">
+    Verificacion obligatoria: contar las filas despues de cada combinacion nueva.
+    Una condicion mal escrita multiplica el resultado sin producir ningun error.
+  </div>
+  <div class="foot">SESION 2.2 - JOIN</div>
+</section>
+
+<!-- 6 INNER VS LEFT -->
+<section>
+  <div class="kicker">Combinacion externa</div>
+  <h2>Cuando interesa lo que no tiene pareja</h2>
+  <table class="gt">
+    <tr><th>Consulta</th><th class="n">Filas</th><th>Que devuelve</th></tr>
+    <tr><td><code>JOIN contracargos</code></td><td class="n">49</td><td>Solo transacciones con contracargo</td></tr>
+    <tr><td><code>LEFT JOIN contracargos</code></td><td class="n">5000</td><td>Todas, con nulo donde no hay</td></tr>
+    <tr><td><code>LEFT JOIN ... WHERE cc IS NULL</code></td><td class="n">4951</td><td>Solo las que no tienen</td></tr>
+  </table>
+  <div class="box small mt">
+    El tercer caso es el uso practico de la combinacion externa: encontrar lo
+    ausente. Aparece en toda conciliacion.
+  </div>
+  <div class="foot">SESION 2.2 - LEFT JOIN</div>
+</section>
+
+<!-- 7 ERROR FRECUENTE -->
+<section>
+  <div class="kicker">Error frecuente</div>
+  <h2>Filtrar en ON o filtrar en WHERE</h2>
+  <pre><code class="language-sql">-- Condicion en ON: se aplica al armar la combinacion.  5000 filas
+LEFT JOIN pagos.contracargos cc
+       ON cc.id_transaccion = t.id_transaccion
+      AND cc.id_contracargo IS NULL
+
+-- Condicion en WHERE: se aplica despues.               4951 filas
+LEFT JOIN pagos.contracargos cc ON cc.id_transaccion = t.id_transaccion
+WHERE cc.id_contracargo IS NULL</code></pre>
+  <div class="box warn small">
+    Una condicion sobre la tabla del lado opcional puesta en <code>WHERE</code>
+    descarta las filas sin pareja, y convierte el <code>LEFT JOIN</code> en un
+    <code>INNER JOIN</code> de hecho.
+  </div>
+  <div class="box key small">
+    Regla: filtrar la tabla del lado opcional en <code>ON</code>, filtrar la tabla
+    principal en <code>WHERE</code>.
+  </div>
+  <div class="foot">SESION 2.2 - ON O WHERE</div>
+</section>
+
+<!-- 8 AGREGACION -->
+<section>
+  <div class="kicker">Agregaciones</div>
+  <h2>La pregunta del inicio, resuelta</h2>
+  <pre><code class="language-sql">SELECT c.nombre, COUNT(*) AS operaciones, SUM(t.monto) AS importe
+FROM pagos.transacciones t
+JOIN pagos.terminales te ON te.id_terminal = t.id_terminal
+JOIN pagos.comercios  c  ON c.id_comercio  = te.id_comercio
+WHERE t.estatus = 'APROBADA'
+GROUP BY c.nombre
+ORDER BY importe DESC;</code></pre>
+  <table class="gt tight">
+    <tr><th>Comercio</th><th class="n">Oper.</th><th>Importe</th></tr>
+    <tr><td>Viajes Altamar</td><td class="n">125</td><td>2,938,402.49</td></tr>
+    <tr><td>Electro Maya</td><td class="n">192</td><td>2,378,339.96</td></tr>
+    <tr><td>Super Norteno</td><td class="n">1181</td><td>2,217,958.06</td></tr>
+  </table>
+  <div class="box small mt">
+    El comercio con mayor importe no es el de mayor volumen. La agregacion
+    responde preguntas que el conteo por si solo no responde.
+  </div>
+  <div class="foot">SESION 2.2 - GROUP BY</div>
+</section>
+
+<!-- 9 FILTER -->
+<section>
+  <div class="kicker">Agregacion condicional</div>
+  <h2>Varias medidas en una sola pasada</h2>
+  <pre><code class="language-sql">SELECT ta.marca,
+       COUNT(*)                                        AS total,
+       COUNT(*) FILTER (WHERE t.estatus = 'RECHAZADA') AS rechazadas,
+       ROUND(100.0 * COUNT(*) FILTER (WHERE t.estatus = 'RECHAZADA')
+             / COUNT(*), 2)                            AS pct_rechazo
+FROM pagos.transacciones t
+JOIN pagos.tarjetas ta ON ta.id_tarjeta = t.id_tarjeta
+GROUP BY ta.marca;</code></pre>
+  <div class="box key small">
+    <code>FILTER</code> aplica una condicion a una funcion de agregacion sin
+    repetir la consulta. La alternativa portable es
+    <code>SUM(CASE WHEN ... THEN 1 ELSE 0 END)</code>.
+  </div>
+  <div class="box small">
+    Resolverlo con dos consultas y dividir en Python obtiene el numero y recorre
+    la tabla dos veces.
+  </div>
+  <div class="foot">SESION 2.2 - FILTER</div>
+</section>
+
+<!-- 10 DIAGRAMA 2 -->
+<section>
+  <div class="kicker">Orden logico</div>
+  <h2>Se escribe en un orden, se evalua en otro</h2>
+  <div class="fig alto"><img src="c2_s2_d2_orden_logico.png" alt="Orden logico de evaluacion"></div>
+  <div class="cap">Figura 2. Conocer el orden real explica por que ciertas cosas no funcionan</div>
+  <div class="foot">SESION 2.2 - ORDEN</div>
+</section>
+
+<!-- 11 WHERE VS HAVING -->
+<section>
+  <div class="kicker">Consecuencia del orden</div>
+  <h2>Dos errores que produce ignorarlo</h2>
+  <pre><code class="language-sql">-- Falla: el alias nace en SELECT, que corre despues de WHERE
+SELECT monto * 1.16 AS con_iva FROM pagos.transacciones WHERE con_iva > 1000;
+
+-- Falla: en WHERE los grupos todavia no existen
+SELECT c.nombre FROM ... WHERE SUM(t.monto) > 1000000 GROUP BY c.nombre;
+   ERROR: aggregate functions are not allowed in WHERE</code></pre>
+  <table class="gt tight">
+    <tr><td><code>WHERE</code></td><td>Filtra filas, antes de agrupar</td></tr>
+    <tr><td><code>HAVING</code></td><td>Filtra grupos, despues de agregar</td></tr>
+  </table>
+  <div class="box warn small mt">
+    Detalle adicional: <code>HAVING importe > 1000000</code> tampoco funciona. El
+    alias nace en <code>SELECT</code>, que se evalua despues. Hay que repetir la
+    expresion completa.
+  </div>
+  <div class="foot">SESION 2.2 - ORDEN</div>
+</section>
+
+<!-- 12 SUBCONSULTAS -->
+<section>
+  <div class="kicker">Subconsultas</div>
+  <h2>Cuatro formas y cuando usar cada una</h2>
+  <table class="gt">
+    <tr><th>Forma</th><th>Cuando conviene</th></tr>
+    <tr><td>Escalar en <code>WHERE</code></td><td>Comparar cada fila contra un valor global</td></tr>
+    <tr><td><code>IN</code></td><td>Lista pequena e independiente de la fila externa</td></tr>
+    <tr><td><code>EXISTS</code></td><td>Basta saber si hay coincidencia. Obligatorio en negaciones</td></tr>
+    <tr><td>En <code>FROM</code></td><td>Agregar en dos etapas</td></tr>
+  </table>
+  <div class="box warn small mt">
+    Si la subconsulta de <code>IN</code> devuelve algun nulo,
+    <code>NOT IN</code> deja de comportarse como se espera y no devuelve filas.
+    <code>NOT EXISTS</code> no tiene ese problema.
+  </div>
+  <div class="box small">
+    Los planificadores modernos suelen reescribir ambas formas al mismo plan. La
+    eleccion es de legibilidad y de correccion ante nulos.
+  </div>
+  <div class="foot">SESION 2.2 - SUBCONSULTAS</div>
+</section>
+
+<!-- 13 DATAFRAMES -->
+<section>
+  <div class="kicker">Hacia el dataframe</div>
+  <h2>Tres rutas de lectura</h2>
+  <pre><code class="language-python">motor = create_engine("postgresql+psycopg://usuario:clave@localhost:5432/pagos")
+df = pd.read_sql(consulta, motor)
+
+with psycopg.connect(cadena) as conexion:
+    df = pl.read_database(consulta, conexion)
+
+df = pl.read_database_uri(consulta, uri, engine="connectorx")</code></pre>
+  <div class="box warn small">
+    El prefijo debe ser <code>postgresql+psycopg</code>. Con
+    <code>postgresql://</code> a secas, SQLAlchemy 2.0 busca
+    <code>psycopg2</code> y el error menciona un modulo que el codigo nunca
+    nombro.
+  </div>
+  <div class="foot">SESION 2.2 - DATAFRAMES</div>
+</section>
+
+<!-- 14 EL HALLAZGO -->
+<section>
+  <div class="kicker">Hallazgo de la sesion</div>
+  <h2>Que pasa con NUMERIC al cruzar</h2>
+  <table class="gt">
+    <tr><th>Ruta</th><th>Tipo de la columna monto</th></tr>
+    <tr><td>Motor, en SQL</td><td><code>numeric(12,2)</code></td></tr>
+    <tr><td><code>pandas.read_sql</code></td><td><code>float64</code></td></tr>
+    <tr><td><code>polars.read_database</code></td><td><code>Decimal(38,2)</code></td></tr>
+  </table>
+  <pre><code class="language-python">SUM en el motor : 12938986.17            (Decimal)
+SUM en pandas   : 12938986.17            (float64)
+el mismo valor  : 12938986.16999999992549419403</code></pre>
+  <div class="box warn small">
+    La garantia de aritmetica exacta que se establecio en la sesion 2.1 termina en
+    la frontera del dataframe. Con cinco mil filas la diferencia no se manifiesta
+    al redondear; lo que se perdio es la garantia.
+  </div>
+  <div class="foot">SESION 2.2 - HALLAZGO</div>
+</section>
+
+<!-- 15 DIAGRAMA 3 -->
+<section>
+  <div class="kicker">Consecuencia practica</div>
+  <h2>Donde conviene agregar</h2>
+  <div class="fig alto"><img src="c2_s2_d3_motor_o_dataframe.png" alt="Agregar en el motor o en el dataframe"></div>
+  <div class="cap">Figura 3. Dos rutas para el mismo resultado, con costos distintos</div>
+  <div class="foot">SESION 2.2 - CRITERIO</div>
+</section>
+
+<!-- 16 CRITERIO -->
+<section>
+  <div class="kicker">Criterio</div>
+  <h2>Mover el calculo hacia los datos</h2>
+  <div class="two">
+    <div>
+      <h3 class="small">Agregar en el motor</h3>
+      <ul class="check tiny">
+        <li>El resultado es mucho menor que el origen</li>
+        <li>La agregacion se expresa de forma directa en SQL</li>
+        <li>El valor es monetario</li>
+        <li>Los datos no caben comodamente en memoria</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="small">Traer al dataframe</h3>
+      <ul class="check tiny">
+        <li>La operacion no se expresa comodamente en SQL</li>
+        <li>Se exploraran muchas variantes del mismo conjunto</li>
+        <li>El resultado alimenta un modelo o una grafica</li>
+        <li>El conjunto ya es pequeno tras un filtro</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box key small mt">
+    Regla breve: mover el calculo hacia los datos, salvo que el calculo no pueda
+    expresarse donde viven los datos.
+  </div>
+  <div class="foot">SESION 2.2 - CRITERIO</div>
+</section>
+
+<!-- 17 ESCRITURA -->
+<section>
+  <div class="kicker">Escritura</div>
+  <h2>Devolver el resultado a la base</h2>
+  <pre><code class="language-python">resumen.to_sql("resumen_comercio", motor, schema="pagos",
+               if_exists="replace", index=False)</code></pre>
+  <div class="box warn small">
+    La estructura resultante la deduce pandas del dataframe: sin llave primaria,
+    sin restricciones, sin indices, y con la columna monetaria convertida a punto
+    flotante.
+  </div>
+  <div class="box key small">
+    Criterio: una tabla que se reconstruye entera y solo se lee puede crearse asi.
+    Una tabla del modelo se declara con DDL, como en la sesion 2.1.
+  </div>
+  <div class="box small">
+    <code>index=False</code> evita que el indice del dataframe se escriba como
+    columna adicional. Omitirlo es el error mas frecuente.
+  </div>
+  <div class="foot">SESION 2.2 - ESCRITURA</div>
+</section>
+
+<!-- 18 CIERRE -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>La combinacion como recorrido de las llaves del modelo</li>
+    <li>La condicion en ON frente a la condicion en WHERE</li>
+    <li>El orden de evaluacion como explicacion de los errores frecuentes</li>
+    <li>El tipo que no siempre sobrevive el cruce hacia el dataframe</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que abre la sesion 2.3:</strong> todas las consultas de hoy
+    producen una fila por grupo. Que ocurre cuando la pregunta necesita comparar
+    cada operacion contra su propio grupo, por ejemplo el gasto acumulado de una
+    tarjeta operacion por operacion, sin perder el detalle.
+  </div>
+  <div class="foot">SESION 2.2 - CIERRE</div>
+</section>
+
+<!-- 19 MATERIALES -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c2_s2_b0_diagramas.py</code></td><td>Render de las tres figuras</td></tr>
+    <tr><td><code>c2_s2_b1_preparacion.md</code></td><td>Verificacion del entorno y bibliotecas nuevas</td></tr>
+    <tr><td><code>c2_s2_b2_consultas.sql</code></td><td>Seis bloques: problema, joins, agregaciones, subconsultas, orden, negocio</td></tr>
+    <tr><td><code>c2_s2_b3_pandas_polars.py</code></td><td>Lectura, tipos, criterio de agregacion y escritura</td></tr>
+    <tr><td><code>c2_s2_b4_taller.md</code></td><td>Taller evaluable</td></tr>
+  </table>
+  <div class="foot">SESION 2.2 - MATERIALES</div>
+</section>
+
+<!-- 20 FINAL -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">2.3 SQL analitico</div>
+    <div class="sub">Expresiones de tabla comunes y funciones de ventana</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>

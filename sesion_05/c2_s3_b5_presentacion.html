@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 2.3 - SQL analitico</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head><body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 2 - Sesion 2.3</div>
+    <div class="big">SQL analitico</div>
+    <div class="sub">Expresiones de tabla comunes y funciones de ventana</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="kicker">De donde venimos</div>
+  <h2>El limite de GROUP BY</h2>
+  <p class="small">La sesion 2.2 respondio cuanto sumo cada tarjeta. Una fila por
+  grupo, con el detalle colapsado. Esa es la operacion de <code>GROUP BY</code> y
+  es exactamente lo que hace.</p>
+  <pre><code class="language-sql">-- Esto es invalido: el motor no sabe que id_transaccion mostrar
+SELECT id_tarjeta, id_transaccion, SUM(monto)
+FROM pagos.transacciones
+GROUP BY id_tarjeta;</code></pre>
+  <div class="box warn small">
+    Pregunta de esta sesion: como fue acumulandose el gasto de una tarjeta,
+    operacion por operacion, sin perder el detalle.
+  </div>
+  <div class="foot">SESION 2.3 - RECUPERACION</div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">20</td><td>La ventana: PARTITION, ORDER y marco</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Ordenamiento y desplazamiento</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>CTE y CTE recursiva</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Preguntas de negocio, revision y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 2.3 - AGENDA</div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="kicker">La idea central</div>
+  <h2>Colapsar o conservar</h2>
+  <div class="fig alto"><img src="c2_s3_d1_ventana_vs_group.png" alt="GROUP BY frente a funcion de ventana"></div>
+  <div class="cap">Figura 1. La misma suma, con y sin perdida del detalle</div>
+  <div class="foot">SESION 2.3 - VENTANA</div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="kicker">Sintaxis</div>
+  <h2>La misma pregunta, resuelta</h2>
+  <pre><code class="language-sql">SELECT id_transaccion, fecha_hora, monto,
+       SUM(monto) OVER (PARTITION BY id_tarjeta ORDER BY fecha_hora) AS acumulado
+FROM pagos.transacciones
+WHERE estatus = 'APROBADA' AND id_tarjeta = 5
+ORDER BY fecha_hora;</code></pre>
+  <div class="box key small">
+    La funcion de agregacion es la misma: <code>SUM</code>. Lo que cambia es
+    <code>OVER</code>, que le indica al motor que calcule sobre un conjunto de
+    filas relacionadas y devuelva un valor por cada fila, en lugar de colapsar.
+  </div>
+  <div class="box small">
+    Comprobacion obligatoria: el ultimo acumulado de cada grupo debe coincidir con
+    el total del grupo. Si no coincide, el <code>ORDER BY</code> de la ventana
+    esta mal planteado.
+  </div>
+  <div class="foot">SESION 2.3 - VENTANA</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="kicker">Anatomia de OVER</div>
+  <h2>Tres piezas, y el marco decide el valor</h2>
+  <div class="fig alto"><img src="c2_s3_d2_marco.png" alt="Las tres piezas de OVER"></div>
+  <div class="cap">Figura 2. PARTITION BY, ORDER BY y el marco de la ventana</div>
+  <div class="foot">SESION 2.3 - MARCO</div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="kicker">La confusion mas frecuente</div>
+  <h2>ORDER BY dentro de OVER no ordena la salida</h2>
+  <pre><code class="language-sql">SUM(monto) OVER (PARTITION BY id_tarjeta)                     -- total del grupo
+SUM(monto) OVER (PARTITION BY id_tarjeta ORDER BY fecha_hora) -- acumulado</code></pre>
+  <table class="gt">
+    <tr><th>Expresion</th><th>Marco resultante</th><th>Valor</th></tr>
+    <tr><td>Sin <code>ORDER BY</code></td><td>El grupo completo</td><td>El total, igual en todas las filas</td></tr>
+    <tr><td>Con <code>ORDER BY</code></td><td>Del inicio a la fila actual</td><td>El acumulado</td></tr>
+    <tr><td>Marco explicito</td><td>Lo que se declare</td><td>Suma o promedio movil</td></tr>
+  </table>
+  <div class="box warn small mt">
+    <code>ORDER BY</code> dentro de <code>OVER</code> cambia el marco, y por lo
+    tanto cambia el valor calculado. No tiene relacion con el
+    <code>ORDER BY</code> final de la consulta.
+  </div>
+  <div class="foot">SESION 2.3 - MARCO</div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="kicker">Marco explicito</div>
+  <h2>Promedio movil de tres operaciones</h2>
+  <pre><code class="language-sql">AVG(monto) OVER (PARTITION BY id_tarjeta ORDER BY fecha_hora
+                 ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)</code></pre>
+  <table class="gt tight">
+    <tr><td><code>ROWS</code></td><td>Cuenta filas fisicas</td></tr>
+    <tr><td><code>RANGE</code></td><td>Agrupa las filas con el mismo valor de <code>ORDER BY</code></td></tr>
+  </table>
+  <div class="box warn small mt">
+    El marco predeterminado es <code>RANGE</code>, no <code>ROWS</code>. Un
+    promedio movil escrito sin marco explicito sobre una columna con valores
+    repetidos da un resultado distinto del esperado, y no falla.
+  </div>
+  <div class="box small">
+    Las primeras filas de cada grupo promedian sobre menos de tres operaciones,
+    porque el marco no puede retroceder mas alla del inicio. Es correcto.
+  </div>
+  <div class="foot">SESION 2.3 - MARCO</div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="kicker">Funciones de ordenamiento</div>
+  <h2>Tres formas de rankear, tres resultados</h2>
+  <table class="gt">
+    <tr><th>Cliente</th><th class="n">Oper.</th><th class="n">ROW_NUMBER</th><th class="n">RANK</th><th class="n">DENSE_RANK</th></tr>
+    <tr><td>Lucia Vargas</td><td class="n">36</td><td class="n">1</td><td class="n">1</td><td class="n">1</td></tr>
+    <tr><td>Ana Delgado</td><td class="n">33</td><td class="n">2</td><td class="n">2</td><td class="n">2</td></tr>
+    <tr><td>Ivan Delgado</td><td class="n">32</td><td class="n">3</td><td class="n">3</td><td class="n">3</td></tr>
+    <tr><td>Rocio Salazar</td><td class="n">32</td><td class="n">4</td><td class="n">3</td><td class="n">3</td></tr>
+    <tr><td>Rocio Zamora</td><td class="n">31</td><td class="n">5</td><td class="n">5</td><td class="n">4</td></tr>
+  </table>
+  <div class="box key small mt">
+    <code>ROW_NUMBER</code> para elegir una fila por grupo.
+    <code>RANK</code> para un ranking publicable, donde el salto es correcto.
+    <code>DENSE_RANK</code> para contar niveles distintos.
+  </div>
+  <div class="box small">
+    Con <code>ROW_NUMBER</code>, agregar siempre un segundo criterio de
+    ordenamiento. Sin el, cual empatado queda primero es arbitrario y el
+    resultado no es reproducible.
+  </div>
+  <div class="foot">SESION 2.3 - RANKING</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="kicker">Desplazamiento</div>
+  <h2>Comparar contra la fila anterior</h2>
+  <pre><code class="language-sql">SELECT mes, importe,
+       LAG(importe) OVER (ORDER BY mes) AS mes_anterior,
+       ROUND(100.0 * (importe - LAG(importe) OVER (ORDER BY mes))
+             / LAG(importe) OVER (ORDER BY mes), 2) AS variacion_pct
+FROM por_mes;</code></pre>
+  <table class="gt tight">
+    <tr><td><code>LAG</code></td><td>La fila anterior del grupo</td></tr>
+    <tr><td><code>LEAD</code></td><td>La fila siguiente</td></tr>
+    <tr><td><code>FIRST_VALUE</code></td><td>La primera del marco</td></tr>
+    <tr><td><code>LAST_VALUE</code></td><td>La ultima del marco, requiere marco explicito</td></tr>
+  </table>
+  <div class="box small mt">
+    La primera fila de cada grupo no tiene predecesora y <code>LAG</code> devuelve
+    nulo. Filtrarlo de forma explicita suele ser lo deseado.
+  </div>
+  <div class="foot">SESION 2.3 - LAG Y LEAD</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="kicker">El limite</div>
+  <h2>La ventana no puede usarse en WHERE</h2>
+  <pre><code class="language-sql">SELECT c.ciudad, c.nombre, SUM(t.monto)
+FROM ...
+WHERE ROW_NUMBER() OVER (PARTITION BY c.ciudad ORDER BY SUM(t.monto) DESC) = 1
+GROUP BY c.ciudad, c.nombre;
+
+ERROR: window functions are not allowed in WHERE</code></pre>
+  <div class="box small">
+    La ventana nace en <code>SELECT</code>, que se evalua despues de
+    <code>WHERE</code>, de <code>GROUP BY</code> y de <code>HAVING</code>. Es el
+    mismo orden de evaluacion de la sesion 2.2, un paso mas adelante.
+  </div>
+  <div class="box key small">
+    La solucion es calcular en una etapa y filtrar en la siguiente. Esa necesidad
+    es la razon practica de que las CTE y las funciones de ventana se enseñen
+    juntas.
+  </div>
+  <div class="foot">SESION 2.3 - LIMITE</div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="kicker">Expresiones de tabla comunes</div>
+  <h2>Nombrar cada paso del calculo</h2>
+  <pre><code class="language-sql">WITH por_comercio AS (
+    SELECT c.ciudad, c.nombre, SUM(t.monto) AS importe
+    FROM ... GROUP BY c.ciudad, c.nombre
+),
+ranking AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY ciudad
+                                 ORDER BY importe DESC) AS posicion
+    FROM por_comercio
+)
+SELECT ciudad, nombre, importe FROM ranking WHERE posicion = 1;</code></pre>
+  <div class="box key small">
+    La version con CTE se lee de arriba abajo, en el orden en que ocurre el
+    calculo. La equivalente con subconsultas anidadas se lee de adentro hacia
+    afuera.
+  </div>
+  <div class="foot">SESION 2.3 - CTE</div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="kicker">Sobre el desempeno</div>
+  <h2>La CTE mejora la lectura. Y el plan</h2>
+  <table class="gt">
+    <tr><th>Situacion</th><th>Efecto</th></tr>
+    <tr><td>PostgreSQL 12 y posteriores, una referencia</td><td>Se integra en la consulta. Plan equivalente al de una subconsulta</td></tr>
+    <tr><td>Versiones anteriores</td><td>Barrera de optimizacion. Se materializaba siempre</td></tr>
+    <tr><td>Varias referencias</td><td>Se materializa una vez y se reutiliza</td></tr>
+  </table>
+  <div class="box small mt">
+    Se puede forzar con <code>MATERIALIZED</code> y <code>NOT MATERIALIZED</code>.
+  </div>
+  <div class="box key small">
+    Lo que conviene retener: la legibilidad mejora siempre; el desempeno depende
+    de la version y del numero de referencias. Afirmar de forma categorica que la
+    CTE es mas rapida o mas lenta es incorrecto.
+  </div>
+  <div class="foot">SESION 2.3 - CTE</div>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="kicker">CTE recursiva</div>
+  <h2>Tres partes y una condicion de parada</h2>
+  <div class="fig alto"><img src="c2_s3_d3_cte_recursiva.png" alt="Estructura de una CTE recursiva"></div>
+  <div class="cap">Figura 3. Caso base, paso recursivo y condicion de parada</div>
+  <div class="foot">SESION 2.3 - RECURSIVA</div>
+</section>
+
+<!-- 15 -->
+<section>
+  <div class="kicker">Uso practico</div>
+  <h2>Los meses que no aparecen</h2>
+  <pre><code class="language-sql">WITH RECURSIVE calendario AS (
+    SELECT DATE '2026-01-01' AS mes
+    UNION ALL
+    SELECT (mes + INTERVAL '1 month')::DATE FROM calendario
+    WHERE mes &lt; DATE '2026-06-01'
+)
+SELECT c.mes, COALESCE(p.importe, 0) AS importe
+FROM calendario c
+LEFT JOIN por_mes p ON p.mes = c.mes;</code></pre>
+  <div class="box key small">
+    Un mes sin operaciones no existe en la tabla y por lo tanto no aparece en un
+    <code>GROUP BY</code>. La serie generada garantiza que el periodo quede
+    completo.
+  </div>
+  <div class="box warn small">
+    El <code>LEFT JOIN</code> va desde el calendario hacia los datos. Invertirlo
+    elimina justamente las filas que se querian conservar.
+  </div>
+  <div class="foot">SESION 2.3 - RECURSIVA</div>
+</section>
+
+<!-- 16 -->
+<section>
+  <div class="kicker">Jerarquias</div>
+  <h2>El otro uso de la recursion</h2>
+  <pre><code class="language-sql">WITH RECURSIVE jerarquia AS (
+    SELECT id_area, nombre, 1 AS nivel, nombre::TEXT AS ruta
+    FROM areas WHERE id_padre IS NULL              -- caso base
+    UNION ALL
+    SELECT a.id_area, a.nombre, j.nivel + 1, j.ruta || ' > ' || a.nombre
+    FROM areas a JOIN jerarquia j ON j.id_area = a.id_padre   -- paso
+)
+SELECT nivel, ruta FROM jerarquia ORDER BY ruta;</code></pre>
+  <div class="box small">
+    Aqui la parada es implicita: la recursion termina cuando ninguna fila nueva se
+    agrega, es decir, al agotarse las hojas.
+  </div>
+  <div class="box warn small">
+    Con un ciclo en los datos, la consulta no termina. Proteccion:
+    <code>UNION</code> en lugar de <code>UNION ALL</code>, un limite de nivel, o
+    la clausula <code>CYCLE</code>.
+  </div>
+  <div class="foot">SESION 2.3 - JERARQUIAS</div>
+</section>
+
+<!-- 17 -->
+<section>
+  <div class="kicker">Aplicacion al caso</div>
+  <h2>Cuatro preguntas de negocio</h2>
+  <table class="gt">
+    <tr><th>Pregunta</th><th>Herramienta</th></tr>
+    <tr><td>Operaciones fuera del patron de su tarjeta</td><td>AVG y STDDEV por particion</td></tr>
+    <tr><td>Intervalo entre operaciones consecutivas</td><td><code>LAG</code> sobre la fecha</td></tr>
+    <tr><td>Cuantos comercios concentran el 80% del importe</td><td>Acumulado ordenado</td></tr>
+    <tr><td>Evolucion del ticket por ciudad</td><td>CTE mas <code>LAG</code></td></tr>
+  </table>
+  <div class="box warn small mt">
+    El criterio de tres desviaciones identifica valores atipicos respecto del
+    propio historial. Es un punto de partida para revision, no una deteccion de
+    fraude: supone simetria, necesita historial suficiente, y el propio dato
+    atipico contamina el promedio que sirve para juzgarlo.
+  </div>
+  <div class="foot">SESION 2.3 - NEGOCIO</div>
+</section>
+
+<!-- 18 -->
+<section>
+  <div class="kicker">Ventana o dataframe</div>
+  <h2>El mismo calculo, tres lugares posibles</h2>
+  <table class="gt tight">
+    <tr><th>SQL</th><th>pandas</th><th>Polars</th></tr>
+    <tr><td><code>SUM(x) OVER (PARTITION BY g)</code></td><td><code>groupby(g)[x].transform('sum')</code></td><td><code>col(x).sum().over(g)</code></td></tr>
+    <tr><td><code>SUM(x) OVER (... ORDER BY f)</code></td><td><code>groupby(g)[x].cumsum()</code></td><td><code>col(x).cum_sum().over(g)</code></td></tr>
+    <tr><td><code>LAG(x) OVER (...)</code></td><td><code>groupby(g)[x].shift(1)</code></td><td><code>col(x).shift(1).over(g)</code></td></tr>
+  </table>
+  <div class="box key small mt">
+    En pandas, <code>transform</code> conserva el detalle igual que la ventana;
+    <code>agg</code> colapsa igual que <code>GROUP BY</code>. Confundirlos es el
+    mismo error que abre esta sesion.
+  </div>
+  <div class="box small">
+    Criterio: en el motor cuando el resultado es mucho menor que el origen y hay
+    un solo consumidor. En el dataframe cuando se exploraran varias derivaciones
+    sobre el mismo conjunto.
+  </div>
+  <div class="foot">SESION 2.3 - CRITERIO</div>
+</section>
+
+<!-- 19 -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>La ventana calcula sobre un grupo y conserva el detalle</li>
+    <li>El marco decide el valor, y el predeterminado no siempre es el esperado</li>
+    <li>La CTE nombra cada paso y habilita filtrar sobre una ventana</li>
+    <li>La recursion genera series y recorre jerarquias</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que abre la sesion 2.4:</strong> todas estas consultas
+    recorren la tabla completa cada vez, y con cinco mil filas responden de
+    inmediato. Que ocurre con millones de filas, y como se averigua que hace el
+    motor por dentro para resolverlas.
+  </div>
+  <div class="box small">
+    Trabajo para la proxima sesion: partes A a E del taller.
+  </div>
+  <div class="foot">SESION 2.3 - CIERRE</div>
+</section>
+
+<!-- 20 -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c2_s3_b0_diagramas.py</code></td><td>Render de las tres figuras</td></tr>
+    <tr><td><code>c2_s3_b1_preparacion.md</code></td><td>Verificacion del entorno</td></tr>
+    <tr><td><code>c2_s3_b2_consultas.sql</code></td><td>Ocho bloques, de la ventana a las preguntas de negocio</td></tr>
+    <tr><td><code>c2_s3_b3_ventanas_dataframe.py</code></td><td>El mismo calculo en SQL, pandas y Polars</td></tr>
+    <tr><td><code>c2_s3_b4_taller.md</code></td><td>Taller evaluable</td></tr>
+  </table>
+  <div class="foot">SESION 2.3 - MATERIALES</div>
+</section>
+
+<!-- 21 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">2.4 Datos<br>semiestructurados</div>
+    <div class="sub">JSONB, indices GIN y SQLAlchemy 2.0</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>

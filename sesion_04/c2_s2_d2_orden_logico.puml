@@ -1,0 +1,57 @@
+@startuml c2_s2_d2_orden_logico
+' ---------------------------------------------------------------
+' c2_s2_d2_orden_logico.puml
+' Sesion 2.2: orden de escritura frente a orden de evaluacion
+'
+' Render: java -jar plantuml.jar c2_s2_d2_orden_logico.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam activity {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+  DiamondBackgroundColor #E8EEF8
+  DiamondBorderColor #004BB7
+}
+skinparam ArrowColor #56646F
+
+title Orden en que el motor evalua la consulta
+
+start
+:1. FROM y JOIN
+se arma el conjunto de filas;
+:2. WHERE
+se filtran filas
+(el alias de SELECT no existe todavia);
+:3. GROUP BY
+se forman los grupos;
+:4. HAVING
+se filtran grupos
+(aqui si valen las funciones de agregacion);
+:5. SELECT
+se calculan las columnas de salida
+(aqui nacen los alias);
+:6. ORDER BY
+se ordena
+(ya puede usar los alias);
+:7. LIMIT
+se recorta;
+stop
+
+note right
+  La consulta se ESCRIBE
+  empezando por SELECT.
+  El motor la EVALUA
+  empezando por FROM.
+
+  Esa distancia explica
+  por que un alias definido
+  en SELECT no funciona
+  dentro de WHERE.
+end note
+
+@enduml
