@@ -1,0 +1,47 @@
+@startuml c2_s3_d1_ventana_vs_group
+' ---------------------------------------------------------------
+' c2_s3_d1_ventana_vs_group.puml
+' Sesion 2.3: GROUP BY colapsa, la ventana conserva
+' Render: java -jar plantuml.jar c2_s3_d1_ventana_vs_group.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title GROUP BY colapsa el grupo, la ventana lo conserva
+
+rectangle "Origen: 4 operaciones de la tarjeta 1" as origen #FFFFFF {
+  rectangle "TRX001   500\nTRX002   300\nTRX003   700\nTRX004   200" as filas
+}
+
+rectangle "GROUP BY id_tarjeta" as gb #FDEEEE {
+  rectangle "id_tarjeta 1\nSUM = 1700\n\n1 fila" as r1
+}
+
+rectangle "SUM(monto) OVER\n(PARTITION BY id_tarjeta\n ORDER BY fecha)" as win #F0FAF6 {
+  rectangle "TRX001   500    500\nTRX002   300    800\nTRX003   700   1500\nTRX004   200   1700\n\n4 filas" as r2
+}
+
+filas --> r1 : "el detalle\nse pierde"
+filas --> r2 : "el detalle\nse conserva"
+
+note bottom of r1
+  Responde cuanto sumo
+  la tarjeta en total.
+end note
+
+note bottom of r2
+  Responde como se fue
+  acumulando ese total,
+  operacion por operacion.
+end note
+
+@enduml

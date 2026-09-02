@@ -1,0 +1,45 @@
+@startuml c2_s3_d2_marco
+' ---------------------------------------------------------------
+' c2_s3_d2_marco.puml
+' Sesion 2.3: las tres piezas de OVER y el marco de la ventana
+' Render: java -jar plantuml.jar c2_s3_d2_marco.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title Las tres piezas de OVER
+
+rectangle "OVER ( ... )" as over #FFFFFF {
+  rectangle "PARTITION BY\nque filas forman el grupo" as p
+  rectangle "ORDER BY\nen que orden se recorren" as o
+  rectangle "marco (ROWS o RANGE)\nque parte del grupo entra\nen el calculo" as m
+}
+
+rectangle "Sin ORDER BY\nel marco es el grupo completo\n\nSUM da el total del grupo\nen todas las filas" as sin #FDF3EA
+rectangle "Con ORDER BY, marco por omision\nUNBOUNDED PRECEDING a CURRENT ROW\n\nSUM da el acumulado" as con #F0FAF6
+rectangle "Marco explicito\nROWS BETWEEN 2 PRECEDING\nAND CURRENT ROW\n\nSUM da la suma movil de tres" as exp #E8EEF8
+
+p -down-> o
+o -down-> m
+m --> sin
+m --> con
+m --> exp
+
+note right of exp
+  ROWS cuenta filas fisicas.
+  RANGE agrupa las filas con
+  el mismo valor de ORDER BY.
+  Con valores repetidos,
+  los dos marcos difieren.
+end note
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml c2_s2_d1_join_recorrido
+' ---------------------------------------------------------------
+' c2_s2_d1_join_recorrido.puml
+' Sesion 2.2: el recorrido que hace una combinacion
+'
+' Muestra el camino de llaves que une la tabla de hechos con el
+' nombre del comercio y con el nombre del cliente.
+'
+' Render: java -jar plantuml.jar c2_s2_d1_join_recorrido.puml
+' ---------------------------------------------------------------
+
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #004BB7
+  HeaderBackgroundColor #E8EEF8
+  FontColor #1C2733
+}
+skinparam ArrowColor #56646F
+skinparam ArrowFontColor #D85A30
+skinparam ArrowFontSize 12
+
+title El recorrido de una combinacion
+
+entity "transacciones" as t {
+  id_transaccion
+  monto
+  --
+  id_terminal <<FK>>
+  id_tarjeta  <<FK>>
+}
+
+entity "terminales" as te {
+  id_terminal <<PK>>
+  --
+  id_comercio <<FK>>
+}
+
+entity "comercios" as c {
+  id_comercio <<PK>>
+  --
+  nombre
+  ciudad
+}
+
+entity "tarjetas" as ta {
+  id_tarjeta <<PK>>
+  --
+  id_cliente <<FK>>
+}
+
+entity "clientes" as cl {
+  id_cliente <<PK>>
+  --
+  nombre
+  correo
+}
+
+t --> te : "JOIN terminales\nON te.id_terminal = t.id_terminal"
+te --> c : "JOIN comercios\nON c.id_comercio = te.id_comercio"
+t --> ta : "JOIN tarjetas\nON ta.id_tarjeta = t.id_tarjeta"
+ta --> cl : "JOIN clientes\nON cl.id_cliente = ta.id_cliente"
+
+note bottom of t
+  La tabla de hechos no contiene
+  ningun nombre legible. Toda
+  pregunta de negocio exige
+  recorrer estas llaves.
+end note
+
+@enduml
