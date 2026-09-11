@@ -1,0 +1,41 @@
+@startuml c2_s4_d2_operadores
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title Operadores de acceso y de busqueda
+
+rectangle "autorizacion (jsonb)" as raiz #FFFFFF {
+  rectangle "{\n  version: '2.1',\n  emisor: { nombre: 'BANORTE', pais: 'MX' },\n  riesgo: { puntaje: 87, senales: ['geo_inusual'] }\n}" as doc
+}
+
+rectangle "Acceso" as acc #E8EEF8 {
+  rectangle "->    devuelve jsonb\n->>   devuelve texto\n#>    ruta, devuelve jsonb\n#>>   ruta, devuelve texto" as a1
+}
+
+rectangle "Busqueda" as bus #F0FAF6 {
+  rectangle "?     la clave existe\n?|    existe alguna\n?&    existen todas\n@>    contiene el documento" as b1
+}
+
+rectangle "Indice GIN" as idx #FDF3EA {
+  rectangle "@>  ?  ?|  ?&\nsi aprovechan el indice\n\n->>  comparado con texto\nNO lo aprovecha" as i1
+}
+
+doc --> a1 : "extraer un valor"
+doc --> b1 : "filtrar filas"
+b1 --> i1
+
+note bottom of i1
+  Escribir el filtro con ->>
+  devuelve el mismo resultado
+  y recorre la tabla completa.
+end note
+
+@enduml
