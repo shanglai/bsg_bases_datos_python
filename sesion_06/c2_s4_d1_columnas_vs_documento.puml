@@ -1,0 +1,45 @@
+@startuml c2_s4_d1_columnas_vs_documento
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title El mensaje de autorizacion: columnas o documento
+
+rectangle "El mensaje varia segun el metodo de captura" as origen #FFFFFF {
+  rectangle "CHIP\ncriptograma, aid,\ncontador_aplicacion" as m1
+  rectangle "QR\nid_codigo, aplicacion,\nvigencia_segundos" as m2
+  rectangle "BANDA\npista,\nlectura_degradada" as m3
+  rectangle "MANUAL\nmotivo,\noperador" as m4
+}
+
+rectangle "Opcion A: una columna por campo" as cols #FDEEEE {
+  rectangle "criptograma      NULL\naid              NULL\nid_codigo        'QR-8A3F...'\naplicacion       'CoDi'\nvigencia         120\npista            NULL\nmotivo           NULL\noperador         NULL\n\n11 columnas, 8 nulas\nen cada fila" as c1
+}
+
+rectangle "Opcion B: un documento JSONB" as doc #F0FAF6 {
+  rectangle "captura: {\n  metodo: 'QR',\n  id_codigo: 'QR-8A3F...',\n  aplicacion: 'CoDi',\n  vigencia_segundos: 120\n}\n\nsolo lo que aplica" as c2
+}
+
+origen --> cols
+origen --> doc
+
+note bottom of c1
+  Cada metodo nuevo obliga
+  a alterar la tabla.
+end note
+
+note bottom of c2
+  Un metodo nuevo no
+  requiere cambio alguno.
+  A cambio, el motor deja
+  de validar la estructura.
+end note
+
+@enduml

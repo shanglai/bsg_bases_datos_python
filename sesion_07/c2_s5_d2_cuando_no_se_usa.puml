@@ -1,0 +1,44 @@
+@startuml c2_s5_d2_cuando_no_se_usa
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title El indice existe, y aun asi no se usa
+
+rectangle "CREATE INDEX ... (id_tarjeta, fecha_hora)" as idx #FFFFFF
+
+rectangle "1. Predicado poco selectivo" as c1 #FDEEEE {
+  rectangle "WHERE estatus = 'APROBADA'\n\n92% de las filas coinciden.\nRecorrer la tabla cuesta menos.\n\nSeq Scan  349 ms" as t1
+}
+
+rectangle "2. Funcion sobre la columna" as c2 #FDEEEE {
+  rectangle "WHERE DATE(fecha_hora) = '2026-03-15'\n\nEl indice esta sobre fecha_hora,\nno sobre DATE(fecha_hora).\n\nSeq Scan  191 ms" as t2
+}
+
+rectangle "3. Segunda columna del compuesto" as c3 #FDEEEE {
+  rectangle "WHERE fecha_hora BETWEEN ...\n\nEl indice se recorre por su\nprimera columna.\n\nSeq Scan  180 ms" as t3
+}
+
+rectangle "Reescrito como rango" as ok #F0FAF6 {
+  rectangle "WHERE fecha_hora >= '2026-03-15'\n  AND fecha_hora <  '2026-03-16'\n\nIndex Only Scan  27 ms" as t4
+}
+
+idx --> c1
+idx --> c2
+idx --> c3
+c2 --> ok : "correccion"
+
+note bottom of ok
+  Crear un indice y suponer que se usa
+  es un error de diagnostico.
+  El plan es la unica forma de saberlo.
+end note
+
+@enduml

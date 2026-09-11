@@ -1,0 +1,39 @@
+@startuml c2_s5_d1_plan
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title Como se lee un plan de ejecucion
+
+rectangle "EXPLAIN ANALYZE\nSELECT COUNT(*), SUM(monto)\nFROM transacciones_volumen\nWHERE id_tarjeta = 42\n  AND fecha_hora BETWEEN ... AND ...;" as q #FFFFFF
+
+rectangle "Aggregate  (cost=31287.33..31287.34 rows=1)\n           (actual time=166.0..166.1 rows=1 loops=1)" as n1 #E8EEF8
+rectangle "  ->  Parallel Seq Scan on transacciones_volumen\n      (cost=0.00..31287.33 rows=634 width=6)\n      (actual time=1.6..157.2 rows=541 loops=3)" as n2 #FDEEEE
+
+q --> n1
+n1 --> n2 : "se lee de abajo\nhacia arriba"
+
+note right of n2
+  cost      costo estimado, en unidades
+            arbitrarias, NO milisegundos
+  rows=634  filas que el motor ESTIMA
+  actual    milisegundos reales
+  rows=541  filas REALES por vuelta
+  loops=3   vueltas ejecutadas
+end note
+
+note bottom of n1
+  El diagnostico mas util:
+  comparar rows estimado contra rows real.
+  Una diferencia de un orden de magnitud
+  indica estadisticas desactualizadas.
+end note
+
+@enduml
