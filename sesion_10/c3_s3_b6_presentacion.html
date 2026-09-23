@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 3.3 - Criterios de seleccion</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head><body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 3 - Sesion 3.3</div>
+    <div class="big">Criterios<br>de seleccion</div>
+    <div class="sub">MongoDB frente a JSONB, y la matriz de decision</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="kicker">La sesion distinta</div>
+  <h2>Hoy no hay respuesta correcta</h2>
+  <p class="small">Las nueve sesiones anteriores enseñaron a operar motores. Esta
+  enseña a elegirlos, y esa es una competencia distinta.</p>
+  <div class="box key small">
+    Dos participantes pueden elegir motores distintos y ambos tener razon, si cada
+    uno sustenta su eleccion. Lo que se evalua es el argumento.
+  </div>
+  <div class="box warn small">
+    Quien salga de esta sesion diciendo que un motor es mejor que el otro no
+    entendio el ejercicio.
+  </div>
+  <div class="foot">SESION 3.3 - APERTURA</div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">25</td><td>Cinco preguntas, en los dos motores</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Los tres costos que no se ven</td><td>Demostracion</td></tr>
+    <tr><td class="n">10</td><td>Los argumentos que no resisten</td><td>Discusion</td></tr>
+    <tr><td class="n">50</td><td>Taller: escenarios y matriz</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Revision y cierre del capitulo</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 3.3 - AGENDA</div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="kicker">El recorrido del curso</div>
+  <h2>El mismo dato, dos caminos</h2>
+  <div class="fig alto"><img src="c3_s3_d3_recorrido.png" alt="El mismo dato por dos caminos"></div>
+  <div class="cap">Figura 1. Todo el curso llevo el mismo caso por dos rutas. Hoy se ponen lado a lado</div>
+  <div class="foot">SESION 3.3 - RECORRIDO</div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="kicker">Cinco preguntas</div>
+  <h2>La misma pregunta, los dos motores</h2>
+  <table class="gt">
+    <tr><th class="n">#</th><th>Pregunta</th><th>Ventaja</th></tr>
+    <tr><td class="n">1</td><td>Importe aprobado por comercio</td><td>Empate</td></tr>
+    <tr><td class="n">2</td><td>Senales de riesgo dentro del documento</td><td>Empate, legibilidad a Mongo</td></tr>
+    <tr><td class="n">3</td><td>Corregir el nombre de un comercio</td><td><strong>PostgreSQL</strong>, con claridad</td></tr>
+    <tr><td class="n">4</td><td>Aceptar un metodo de captura nuevo</td><td>Empate</td></tr>
+    <tr><td class="n">5</td><td>Rechazar un monto mal formado</td><td><strong>PostgreSQL</strong> por omision</td></tr>
+  </table>
+  <div class="box key small mt">
+    Ninguno gana en todo. Y el argumento mas repetido a favor del modelo
+    documental, la estructura variable, resulta un empate.
+  </div>
+  <div class="foot">SESION 3.3 - COMPARACION</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="kicker">Pregunta 3</div>
+  <h2>Corregir un dato compartido</h2>
+  <pre><code class="language-sql">-- PostgreSQL: 1 fila, atomico
+UPDATE pagos.comercios SET nombre = 'Super Nortenio'
+WHERE nombre = 'Super Norteno';</code></pre>
+  <pre><code class="language-python"># MongoDB: 1524 documentos, NO atomico entre ellos
+coleccion.update_many({"comercio.nombre": "Super Norteno"},
+                      {"$set": {"comercio.nombre": "Super Nortenio"}})</code></pre>
+  <div class="box warn small">
+    Si el proceso se interrumpe, unos documentos quedan corregidos y otros no. El
+    mismo comercio, con el mismo identificador, aparece con dos nombres. Ninguna
+    consulta lo advierte.
+  </div>
+  <div class="box key small">
+    Es la contrapartida directa de la denormalizacion que hizo comoda la
+    pregunta 1.
+  </div>
+  <div class="foot">SESION 3.3 - COMPARACION</div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="kicker">Pregunta 4, la que sorprende</div>
+  <h2>Un metodo de captura nuevo</h2>
+  <pre><code class="language-python">{"captura": {"metodo": "BIOMETRICO", "modalidad": "huella",
+             "calidad_muestra": 0.94, "dispositivo_biometrico": "BIO-4410"}}
+
+# PostgreSQL con JSONB: aceptado, sin alterar la tabla
+# MongoDB:              aceptado, sin cambio alguno</code></pre>
+  <div class="box key small">
+    Empate. El argumento habitual a favor de MongoDB, aceptar estructura variable
+    sin migracion, PostgreSQL lo hace igual desde la sesion 2.4.
+  </div>
+  <div class="box small">
+    La diferencia no esta en <strong>si se puede</strong>, sino en
+    <strong>donde vive</strong> la parte variable.
+  </div>
+  <div class="foot">SESION 3.3 - COMPARACION</div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="kicker">La diferencia real</div>
+  <h2>Donde vive la parte variable</h2>
+  <div class="fig alto"><img src="c3_s3_d1_donde_vive.png" alt="Donde vive la parte variable"></div>
+  <div class="cap">Figura 2. Una columna dentro de un modelo estricto, o todo el documento</div>
+  <div class="foot">SESION 3.3 - LA DIFERENCIA</div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="kicker">Pregunta 5</div>
+  <h2>Lo que ocurre por omision</h2>
+  <table class="gt">
+    <tr><th>Un monto que llega como texto</th><th>Resultado</th></tr>
+    <tr><td>PostgreSQL, columna <code>NUMERIC</code></td><td>RECHAZADO</td></tr>
+    <tr><td>MongoDB, sin validador</td><td>ACEPTADO, y <code>$sum</code> lo ignora</td></tr>
+    <tr><td>MongoDB, con <code>$jsonSchema</code></td><td>RECHAZADO</td></tr>
+  </table>
+  <div class="box key small mt">
+    MongoDB <strong>puede</strong> rechazarlo. La diferencia es que en PostgreSQL
+    la garantia existe desde que se declara la tabla, y en MongoDB existe cuando
+    alguien decide declararla.
+  </div>
+  <div class="box small">
+    En un equipo con rotacion, o con varios sistemas escribiendo sobre la misma
+    coleccion, esa diferencia de por omision es el criterio.
+  </div>
+  <div class="foot">SESION 3.3 - COMPARACION</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="kicker">Los tres costos</div>
+  <h2>Lo que la comparacion no muestra</h2>
+  <table class="gt">
+    <tr><th>Costo</th><th>En que consiste</th></tr>
+    <tr><td>Consistencia</td><td>La correccion interrumpida deja el mismo comercio con dos nombres, y nada lo advierte</td></tr>
+    <tr><td>Operacion</td><td>Espacio, conocimiento del equipo, herramientas, respaldo. Y operar dos motores en lugar de uno</td></tr>
+    <tr><td>Cambiar de opinion</td><td>Salir del modelo relacional es barato. Entrar es caro</td></tr>
+  </table>
+  <div class="box key small mt">
+    La asimetria del tercero es un argumento practico: cuando la decision no es
+    clara, conviene empezar por el modelo estricto, porque tiene la salida mas
+    barata.
+  </div>
+  <div class="foot">SESION 3.3 - COSTOS</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="kicker">Los argumentos que se repiten</div>
+  <h2>Cuatro de cinco no resisten</h2>
+  <table class="gt tight">
+    <tr><th>Afirmacion</th><th>Veredicto</th></tr>
+    <tr><td>MongoDB es para datos no estructurados</td><td>No resiste. El caso tiene estructura clara</td></tr>
+    <tr><td>MongoDB es mas rapido</td><td>No resiste. Depende del modelo, indices, volumen y consulta</td></tr>
+    <tr><td>Sin esquema se avanza mas rapido</td><td>Parcial. Cierto al inicio, costo diferido caro</td></tr>
+    <tr><td>PostgreSQL no escala</td><td>No resiste como esta formulado</td></tr>
+    <tr><td>Ya tenemos MongoDB operando</td><td><strong>Valido</strong>, y no tecnico</td></tr>
+  </table>
+  <div class="box key small mt">
+    El unico que resiste no es un argumento tecnico. Conviene declararlo como lo
+    que es, un criterio organizacional, y no disfrazarlo.
+  </div>
+  <div class="foot">SESION 3.3 - ARGUMENTOS</div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="kicker">El metodo</div>
+  <h2>Las preguntas que deciden</h2>
+  <div class="fig alto"><img src="c3_s3_d2_preguntas.png" alt="Las preguntas que deciden"></div>
+  <div class="cap">Figura 3. El orden importa: las primeras pesan mas que las ultimas</div>
+  <div class="foot">SESION 3.3 - METODO</div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="kicker">Las siete preguntas</div>
+  <h2>Se responden sobre el sistema concreto</h2>
+  <ol class="small">
+    <li>Que fraccion del modelo tiene estructura estable</li>
+    <li>Hay datos compartidos que cambian</li>
+    <li>Quien debe garantizar la consistencia</li>
+    <li>Cuantos sistemas escriben sobre estos datos</li>
+    <li>La consulta habitual lee un agregado o cruza entidades</li>
+    <li>El volumen excede lo que cabe en un servidor</li>
+    <li>Que sabe operar el equipo</li>
+  </ol>
+  <div class="box warn small">
+    La segunda es la mas subestimada. Un dato compartido que cambia hace caro el
+    modelo documental, y casi nunca aparece en las comparaciones de
+    caracteristicas.
+  </div>
+  <div class="foot">SESION 3.3 - METODO</div>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="kicker">El caso, resuelto</div>
+  <h2>Pagos apunta a PostgreSQL con JSONB</h2>
+  <table class="gt tight">
+    <tr><th>Pregunta</th><th>Respuesta en el caso</th></tr>
+    <tr><td>Fraccion estable</td><td>Alta. Solo el mensaje de autorizacion varia</td></tr>
+    <tr><td>Datos compartidos que cambian</td><td>Si: nombre y categoria del comercio, correo</td></tr>
+    <tr><td>Quien garantiza</td><td>El motor. Sistema financiero con auditoria</td></tr>
+    <tr><td>Sistemas que escriben</td><td>Varios: captura, contracargos, conciliacion</td></tr>
+    <tr><td>Consulta habitual</td><td>Cruza entidades</td></tr>
+  </table>
+  <div class="box small mt">
+    <strong>Se cede:</strong> el reparto horizontal automatico y la comodidad de
+    leer la operacion completa sin combinaciones.
+  </div>
+  <div class="box key small">
+    <strong>Cambiaria si:</strong> el volumen excediera lo que un servidor
+    sostiene, o si el mensaje de autorizacion dejara de ser una porcion acotada.
+  </div>
+  <div class="foot">SESION 3.3 - EL CASO</div>
+</section>
+
+<!-- 15 -->
+<section>
+  <div class="kicker">El mismo metodo, otro resultado</div>
+  <h2>Un catalogo de comercio electronico</h2>
+  <table class="gt">
+    <tr><th>Pregunta</th><th>Respuesta</th></tr>
+    <tr><td>Fraccion estable</td><td>Baja. Los atributos difieren por categoria</td></tr>
+    <tr><td>Datos compartidos que cambian</td><td>Pocos</td></tr>
+    <tr><td>Quien garantiza</td><td>La aplicacion basta</td></tr>
+    <tr><td>Consulta habitual</td><td>Lee la ficha completa</td></tr>
+  </table>
+  <div class="box key small mt">
+    Los mismos criterios, aplicados a otro caso, dan el resultado
+    <strong>contrario</strong>. Eso es lo que demuestra que son criterios y no una
+    preferencia.
+  </div>
+  <div class="box small">
+    Si un participante elige lo mismo para todos los escenarios del taller, no
+    esta aplicando el metodo.
+  </div>
+  <div class="foot">SESION 3.3 - CONTRASTE</div>
+</section>
+
+<!-- 16 -->
+<section>
+  <div class="kicker">El entregable</div>
+  <h2>Los dos renglones que se evaluan</h2>
+  <table class="gt tight">
+    <tr><th>Renglon de la matriz</th></tr>
+    <tr><td>Requerimiento, motor propuesto, las siete preguntas respondidas</td></tr>
+    <tr><td>Decision</td></tr>
+    <tr><td><strong>Que se cede al elegirlo</strong></td></tr>
+    <tr><td><strong>Que haria cambiar esta decision</strong></td></tr>
+  </table>
+  <div class="box key small mt">
+    Una propuesta que no declara que cede, o que no identifica que la haria
+    cambiar, esta incompleta aunque la eleccion sea acertada.
+  </div>
+  <div class="box warn small">
+    Siempre se cede algo. Si no se encuentra, es que no se examino el problema.
+  </div>
+  <div class="foot">SESION 3.3 - MATRIZ</div>
+</section>
+
+<!-- 17 -->
+<section>
+  <div class="kicker">Cierre del capitulo 3</div>
+  <h2>Tres motores caracterizados</h2>
+  <table class="gt tight">
+    <tr><th>Motor</th><th>Cuando conviene</th></tr>
+    <tr><td>SQLite</td><td>Local, un usuario, prototipo, distribuir un conjunto</td></tr>
+    <tr><td>PostgreSQL</td><td>Integridad importante, relaciones estables, parte variable acotada</td></tr>
+    <tr><td>MongoDB</td><td>Estructura que varia por completo, lectura del agregado, reparto horizontal</td></tr>
+  </table>
+  <div class="box key small mt">
+    <strong>Falta uno.</strong> Ninguno de los tres responde bien la pregunta de
+    la telemetria: millones de lecturas diarias, analisis por agregacion temporal,
+    y casi nunca se lee un registro individual.
+  </div>
+  <div class="box small">
+    El capitulo 4 abre con el modelo clave-valor y cierra con el almacen analitico
+    en la nube. La matriz se completa ahi.
+  </div>
+  <div class="foot">SESION 3.3 - CIERRE</div>
+</section>
+
+<!-- 18 -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c3_s3_b0_diagramas.py</code></td><td>Render de las tres figuras</td></tr>
+    <tr><td><code>c3_s3_b1_preparacion.md</code></td><td>Verificacion de ambos motores</td></tr>
+    <tr><td><code>c3_s3_b2_comparacion.py</code></td><td>Cinco preguntas en los dos motores</td></tr>
+    <tr><td><code>c3_s3_b3_costos.py</code></td><td>Consistencia, operacion y cambiar de opinion</td></tr>
+    <tr><td><code>c3_s3_b4_matriz.md</code></td><td>Las cuatro fichas, los criterios y la plantilla</td></tr>
+    <tr><td><code>c3_s3_b5_taller.md</code></td><td>Cinco escenarios y la matriz</td></tr>
+  </table>
+  <div class="foot">SESION 3.3 - MATERIALES</div>
+</section>
+
+<!-- 19 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">4.1 El modelo<br>clave-valor</div>
+    <div class="sub">Redis, la cache y la latencia que ningun motor anterior resuelve</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# =====================================================================
+# c3_s1_b2_env_ejemplo.txt
+# Sesion 3.1: variables que se agregan al archivo .env existente
+#
+# Uso:
+#   1. Abrir el archivo .env creado en la sesion 2.1
+#   2. Agregar al final las lineas de abajo
+#   3. Sustituir el valor de MONGO_PASSWORD
+#
+# NO se crea un archivo .env nuevo. El capitulo 3 usa los dos motores
+# a la vez y ambos leen del mismo archivo.
+# =====================================================================
+
+MONGO_USER=curso
+MONGO_PASSWORD=cambiar_este_valor
+MONGO_HOST=localhost
+MONGO_PORT=27017
+MONGO_DB=pagos
+
+# ---------------------------------------------------------------------
+# Nota sobre autenticacion
+#
+# La imagen oficial crea el usuario en la base admin, no en la base de
+# trabajo. Por eso la cadena de conexion incluye authSource=admin:
+#
+#   mongodb://curso:clave@localhost:27017/?authSource=admin
+#
+# Omitir ese parametro produce un error de autenticacion que no dice
+# cual es la causa. Es el tropiezo mas frecuente al conectar por
+# primera vez.
+# ---------------------------------------------------------------------

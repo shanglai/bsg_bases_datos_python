@@ -1,0 +1,41 @@
+@startuml c3_s1_d2_esquema_flexible
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title Que valida cada motor al escribir
+
+rectangle "PostgreSQL" as pg #FFFFFF {
+  rectangle "INSERT con columna inexistente\n-> ERROR: column does not exist\n\nINSERT con estatus 'PENDIENTE'\n-> ERROR: violates check constraint\n\nINSERT sin campo NOT NULL\n-> ERROR: null value not allowed" as p1 #E8EEF8
+}
+
+rectangle "MongoDB" as mg #FFFFFF {
+  rectangle "insert_one con campo nuevo\n-> aceptado\n\ninsert_one con estatus 'PENDIENTE'\n-> aceptado\n\ninsert_one sin ningun campo\n-> aceptado" as m1 #F0FAF6
+}
+
+rectangle "Lo unico que MongoDB si rechaza" as ok #FDF3EA {
+  rectangle "_id repetido\n-> DuplicateKeyError" as m2
+}
+
+pg -[hidden]right-> mg
+mg --> ok
+
+note bottom of p1
+  El esquema se declara con DDL
+  y el motor lo aplica siempre.
+end note
+
+note bottom of m1
+  No hay esquema que validar.
+  La flexibilidad y el riesgo
+  son la misma propiedad.
+end note
+
+@enduml

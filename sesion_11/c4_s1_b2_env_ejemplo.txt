@@ -1,0 +1,26 @@
+# =====================================================================
+# c4_s1_b2_env_ejemplo.txt
+# Sesion 4.1: variables que se agregan al archivo .env existente
+#
+# Uso:
+#   1. Abrir el archivo .env que ya tiene PostgreSQL y MongoDB
+#   2. Agregar al final las lineas de abajo
+#   3. Sustituir el valor de REDIS_PASSWORD
+#
+# Sigue siendo un solo archivo .env para los tres motores.
+# =====================================================================
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=cambiar_este_valor
+
+# ---------------------------------------------------------------------
+# Nota sobre la contrasena
+#
+# A diferencia de PostgreSQL y MongoDB, Redis NO conserva la contrasena
+# en el volumen: se declara en el comando de arranque cada vez.
+#
+# Eso significa que cambiarla aqui SI surte efecto al volver a levantar
+# el contenedor, sin necesidad de down -v. Es la trampa de las sesiones
+# 2.1 y 3.1 que aqui no aplica.
+# ---------------------------------------------------------------------
