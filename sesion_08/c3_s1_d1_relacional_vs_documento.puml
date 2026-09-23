@@ -1,0 +1,45 @@
+@startuml c3_s1_d1_relacional_vs_documento
+!theme plain
+skinparam backgroundColor transparent
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowColor #56646F
+skinparam rectangle {
+  BackgroundColor #F3F7FD
+  BorderColor #004BB7
+  FontColor #1C2733
+}
+
+title Una operacion, dos formas de guardarla
+
+rectangle "PostgreSQL: cinco tablas" as rel #E8EEF8 {
+  rectangle "transacciones\nid, fecha, monto, estatus\nid_terminal, id_tarjeta" as t1
+  rectangle "terminales\nid, id_comercio, codigo" as t2
+  rectangle "comercios\nid, nombre, categoria, ciudad" as t3
+  rectangle "tarjetas\nid, id_cliente, ultimos4" as t4
+  rectangle "clientes\nid, nombre, correo" as t5
+  t1 -[#004BB7]-> t2
+  t2 -[#004BB7]-> t3
+  t1 -[#004BB7]-> t4
+  t4 -[#004BB7]-> t5
+}
+
+rectangle "MongoDB: un documento" as doc #F0FAF6 {
+  rectangle "{\n  _id: 'TRX0000010',\n  fecha_hora: ...,\n  monto: 3553.02,\n  estatus: 'APROBADA',\n  comercio: { nombre, categoria, ciudad },\n  terminal: { codigo },\n  cliente:  { nombre, correo },\n  tarjeta:  { ultimos4, marca },\n  autorizacion: { ... }\n}" as d1
+}
+
+rel -right-> doc : "denormalizacion"
+
+note bottom of rel
+  Leer exige cuatro combinaciones.
+  Cambiar el nombre de un comercio
+  es UNA fila.
+end note
+
+note bottom of doc
+  Leer es una sola busqueda.
+  Cambiar el nombre de un comercio
+  son CIENTOS de documentos.
+end note
+
+@enduml

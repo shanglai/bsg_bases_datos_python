@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion 3.2 - Consulta y agregacion</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head><body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Capitulo 3 - Sesion 3.2</div>
+    <div class="big">Consulta<br>y agregacion</div>
+    <div class="sub">Canalizacion, indices y validacion de esquema</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="kicker">De donde venimos</div>
+  <h2>Dos preguntas que quedaron abiertas</h2>
+  <p class="small">La sesion 3.1 mostro dos cosas incomodas. Que la coleccion no
+  tiene esquema, y que un monto escrito como texto entra sin objecion y se ignora
+  al sumar.</p>
+  <div class="box warn small">
+    Si el motor no valida nada, como se responde una pregunta analitica sobre
+    datos que pueden venir de cualquier forma.
+  </div>
+  <div class="box key small">
+    La sesion de hoy responde ambas: la canalizacion de agregacion para consultar,
+    los indices para hacerlo con eficiencia, y la validacion de esquema para
+    recuperar parte del control.
+  </div>
+  <div class="foot">SESION 3.2 - APERTURA</div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="kicker">Agenda de la sesion</div>
+  <h2>Dos horas, cinco momentos</h2>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th><th>Modalidad</th></tr>
+    <tr><td class="n">20</td><td>La canalizacion: etapas y acumuladores</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Arreglos y combinaciones</td><td>Demostracion</td></tr>
+    <tr><td class="n">15</td><td>Indices y plan de ejecucion</td><td>Demostracion</td></tr>
+    <tr><td class="n">50</td><td>Taller</td><td>Practica</td></tr>
+    <tr><td class="n">20</td><td>Validacion de esquema, pandas y cierre</td><td>Discusion</td></tr>
+  </table>
+  <div class="foot">SESION 3.2 - AGENDA</div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="kicker">La idea</div>
+  <h2>Una tuberia de etapas</h2>
+  <div class="fig alto"><img src="c3_s2_d1_tuberia.png" alt="La canalizacion como tuberia"></div>
+  <div class="cap">Figura 1. Cada etapa recibe documentos, los transforma y entrega el resultado</div>
+  <div class="foot">SESION 3.2 - CANALIZACION</div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="kicker">Equivalencias</div>
+  <h2>Lo que ya se sabe, traducido</h2>
+  <table class="gt">
+    <tr><th>Etapa</th><th>SQL</th><th>Que hace</th></tr>
+    <tr><td><code>$match</code></td><td><code>WHERE</code></td><td>Filtra documentos</td></tr>
+    <tr><td><code>$group</code></td><td><code>GROUP BY</code></td><td>Agrupa y acumula</td></tr>
+    <tr><td><code>$sort</code></td><td><code>ORDER BY</code></td><td>Ordena</td></tr>
+    <tr><td><code>$project</code></td><td>La lista del <code>SELECT</code></td><td>Elige y calcula campos</td></tr>
+    <tr><td><code>$lookup</code></td><td><code>LEFT JOIN</code></td><td>Combina con otra coleccion</td></tr>
+    <tr><td><code>$unwind</code></td><td>no tiene equivalente</td><td>Expande un arreglo a documentos</td></tr>
+    <tr><td><code>$facet</code></td><td>no tiene equivalente</td><td>Varias tuberias en un recorrido</td></tr>
+  </table>
+  <div class="box warn small mt">
+    Diferencia de fondo: SQL tiene un orden logico fijo, estudiado en la sesion
+    2.2. Aqui la tuberia se ejecuta en el orden en que se escribe, y ese orden lo
+    decide quien consulta.
+  </div>
+  <div class="foot">SESION 3.2 - CANALIZACION</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="kicker">Regla principal</div>
+  <h2>$match va lo mas temprano posible</h2>
+  <pre><code class="language-python">[{"$match": {"estatus": "APROBADA"}},     # 5000 -> 3917 documentos
+ {"$group": {"_id": "$comercio.nombre",
+             "operaciones": {"$sum": 1},
+             "importe": {"$sum": "$monto"}}},
+ {"$sort": {"importe": -1}}]</code></pre>
+  <div class="box key small">
+    Cada documento descartado en <code>$match</code> es trabajo que las etapas
+    siguientes no hacen.
+  </div>
+  <div class="box warn small">
+    MongoDB reordena algunas etapas por su cuenta, igual que el planificador de
+    PostgreSQL. No conviene depender de eso: escribir la tuberia en el orden
+    correcto es gratis y siempre funciona.
+  </div>
+  <div class="foot">SESION 3.2 - CANALIZACION</div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="kicker">Acumuladores</div>
+  <h2>Varias medidas en una sola pasada</h2>
+  <pre><code class="language-python">{"$group": {
+    "_id": "$comercio.ciudad",
+    "operaciones": {"$sum": 1},
+    "importe": {"$sum": "$monto"},
+    "ticket": {"$avg": "$monto"},
+    "maximo": {"$max": "$monto"},
+    "comercios": {"$addToSet": "$comercio.nombre"},
+}}</code></pre>
+  <table class="gt tight">
+    <tr><td><code>$push</code></td><td>Construye un arreglo, conserva repetidos</td></tr>
+    <tr><td><code>$addToSet</code></td><td>Construye un arreglo sin repetidos</td></tr>
+    <tr><td><code>_id</code> compuesto</td><td>Agrupa por varios campos, como un documento</td></tr>
+  </table>
+  <div class="box warn small mt">
+    Un documento no puede exceder 16 MB. Un <code>$push</code> sobre un grupo muy
+    grande revienta ese limite.
+  </div>
+  <div class="foot">SESION 3.2 - ACUMULADORES</div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="kicker">La etapa que no tiene equivalente</div>
+  <h2>$unwind</h2>
+  <div class="fig alto"><img src="c3_s2_d2_unwind.png" alt="La etapa unwind"></div>
+  <div class="cap">Figura 2. Un documento con tres senales produce tres documentos</div>
+  <div class="foot">SESION 3.2 - UNWIND</div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="kicker">El error que parece razonable</div>
+  <h2>Agrupar un arreglo sin expandirlo</h2>
+  <pre><code class="language-python"># Sin $unwind: agrupa por COMBINACION de senales
+{"$group": {"_id": "$autorizacion.riesgo.senales", "veces": {"$sum": 1}}}
+   _id: ["geo_inusual", "monto_atipico"]   veces: 41
+
+# Con $unwind: agrupa por senal
+{"$unwind": "$autorizacion.riesgo.senales"},
+{"$group": {"_id": "$autorizacion.riesgo.senales", "veces": {"$sum": 1}}}
+   _id: "geo_inusual"   veces: 812</code></pre>
+  <div class="box warn small">
+    Ambas devuelven un resultado que parece razonable. La primera responde otra
+    pregunta.
+  </div>
+  <div class="box key small">
+    Y <code>$unwind</code> descarta los documentos cuyo arreglo este vacio o
+    ausente, salvo que se declare
+    <code>preserveNullAndEmptyArrays</code>. Sobre el caso: 5000 originales, 4741
+    tras <code>$unwind</code>, 7042 conservando los vacios.
+  </div>
+  <div class="foot">SESION 3.2 - UNWIND</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="kicker">Combinar colecciones</div>
+  <h2>$lookup devuelve un arreglo</h2>
+  <pre><code class="language-python">{"$lookup": {"from": "catalogo_categorias",
+             "localField": "_id", "foreignField": "_id",
+             "as": "catalogo"}},
+{"$unwind": "$catalogo"},
+{"$project": {"importe": 1, "giro": "$catalogo.giro"}}</code></pre>
+  <table class="gt tight">
+    <tr><th>Frente a un LEFT JOIN</th></tr>
+    <tr><td>Devuelve un arreglo, no filas combinadas. Casi siempre va seguido de <code>$unwind</code></td></tr>
+    <tr><td>No hay llaves foraneas: nada garantiza que la referencia resuelva</td></tr>
+    <tr><td>Su costo crece con el conjunto que lo precede, de modo que va despues del <code>$group</code></td></tr>
+  </table>
+  <div class="box key small mt">
+    Criterio: <code>$lookup</code> para catalogos pequenos y consultas
+    ocasionales. Lo que se consulta siempre, se incorpora.
+  </div>
+  <div class="foot">SESION 3.2 - LOOKUP</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="kicker">Indices</div>
+  <h2>El plan, con otros nombres</h2>
+  <pre><code class="language-python">base.command("explain",
+             {"find": "operaciones", "filter": filtro},
+             verbosity="executionStats")</code></pre>
+  <table class="gt">
+    <tr><th>Indicador</th><th>Significado</th><th>En PostgreSQL</th></tr>
+    <tr><td><code>COLLSCAN</code></td><td>Recorrio la coleccion completa</td><td>Seq Scan</td></tr>
+    <tr><td><code>IXSCAN</code></td><td>Uso un indice</td><td>Index Scan</td></tr>
+    <tr><td><code>totalDocsExamined</code></td><td>Documentos leidos</td><td>rows examinadas</td></tr>
+    <tr><td><code>nReturned</code></td><td>Documentos devueltos</td><td>rows devueltas</td></tr>
+  </table>
+  <div class="box warn small mt">
+    <code>cursor.explain()</code> de PyMongo usa la verbosidad predeterminada, que
+    <strong>no incluye</strong> <code>executionStats</code>. Sin ese bloque no hay
+    documentos examinados ni tiempo real.
+  </div>
+  <div class="box key small">
+    El diagnostico es el mismo de la sesion 2.5: cuando examinados supera con
+    mucho a devueltos, hay trabajo desperdiciado.
+  </div>
+  <div class="foot">SESION 3.2 - INDICES</div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="kicker">Dos capacidades propias</div>
+  <h2>Campos anidados y arreglos</h2>
+  <pre><code class="language-python">coleccion.create_index("autorizacion.emisor.nombre")
+coleccion.create_index("autorizacion.riesgo.senales")   # multiclave</code></pre>
+  <div class="box small">
+    El indice sobre un campo anidado usa la misma notacion de punto de la
+    consulta. En PostgreSQL haria falta un indice de expresion sobre JSONB, como
+    en la sesion 2.4.
+  </div>
+  <div class="box small">
+    El indice sobre un arreglo se llama <strong>multiclave</strong>: MongoDB crea
+    una entrada por cada elemento. Buscar un valor dentro del arreglo lo usa de
+    forma directa.
+  </div>
+  <div class="box warn small">
+    Un indice compuesto admite a lo mas <strong>un</strong> campo de tipo arreglo.
+    Con dos, MongoDB rechaza la creacion.
+  </div>
+  <div class="foot">SESION 3.2 - INDICES</div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="kicker">La respuesta a la sesion 3.1</div>
+  <h2>Validacion de esquema</h2>
+  <pre><code class="language-python">base.create_collection("operaciones_validadas", validator={
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["_id", "monto", "estatus"],
+        "properties": {
+            "monto": {"bsonType": ["double", "int", "decimal"], "minimum": 0},
+            "estatus": {"enum": ["APROBADA", "RECHAZADA", "REVERSADA"]},
+        }}},
+    validationLevel="strict", validationAction="error")</code></pre>
+  <table class="gt tight">
+    <tr><th>Documento</th><th>Resultado</th></tr>
+    <tr><td>Correcto</td><td>ACEPTADO</td></tr>
+    <tr><td><code>monto: "mil pesos"</code></td><td>RECHAZADO</td></tr>
+    <tr><td><code>estatus: "PENDIENTE"</code></td><td>RECHAZADO</td></tr>
+    <tr><td><code>monto: -50</code></td><td>RECHAZADO</td></tr>
+  </table>
+  <div class="foot">SESION 3.2 - VALIDACION</div>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="kicker">Alcance</div>
+  <h2>Que recupera y que no</h2>
+  <div class="two">
+    <div>
+      <h3 class="small">Recupera</h3>
+      <ul class="check tiny">
+        <li>Tipos de dato</li>
+        <li>Campos obligatorios</li>
+        <li>Dominios, con <code>enum</code></li>
+        <li>Rangos numericos</li>
+        <li>Estructura de subdocumentos</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="small">No recupera</h3>
+      <ul class="check tiny">
+        <li>Referencias entre colecciones</li>
+        <li>Unicidad, que va como indice aparte</li>
+        <li>Consistencia de los datos incorporados por denormalizacion</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box key small mt">
+    Diferencia de fondo con PostgreSQL: aqui la validacion es <strong>opcional</strong>
+    y se agrega cuando alguien decide agregarla. En el modelo relacional es
+    obligatoria desde que se declara la tabla.
+  </div>
+  <div class="foot">SESION 3.2 - VALIDACION</div>
+</section>
+
+<!-- 15 -->
+<section>
+  <div class="kicker">Introducirla sin romper nada</div>
+  <h2>Medir antes de rechazar</h2>
+  <table class="gt">
+    <tr><th>Parametro</th><th>Valor</th><th>Efecto</th></tr>
+    <tr><td rowspan="2"><code>validationLevel</code></td><td><code>strict</code></td><td>Valida toda escritura</td></tr>
+    <tr><td><code>moderate</code></td><td>Solo valida documentos que ya cumplian</td></tr>
+    <tr><td rowspan="2"><code>validationAction</code></td><td><code>error</code></td><td>Rechaza</td></tr>
+    <tr><td><code>warn</code></td><td>Registra en la bitacora y deja pasar</td></tr>
+  </table>
+  <div class="box warn small mt">
+    Activar validacion estricta sobre una coleccion con datos historicos bloquea
+    la actualizacion de los que no cumplen. La validacion no se aplica de forma
+    retroactiva, pero cualquier escritura sobre ellos falla.
+  </div>
+  <div class="box key small">
+    Camino seguro: declarar con <code>warn</code>, medir cuantos incumplirian,
+    corregir, y despues cambiar a <code>error</code>.
+  </div>
+  <div class="foot">SESION 3.2 - VALIDACION</div>
+</section>
+
+<!-- 16 -->
+<section>
+  <div class="kicker">Hacia el dataframe</div>
+  <h2>El documento es anidado, la tabla es plana</h2>
+  <div class="fig alto"><img src="c3_s2_d3_donde_calcular.png" alt="Del documento al dataframe"></div>
+  <div class="cap">Figura 3. Tres caminos, con costos distintos</div>
+  <div class="foot">SESION 3.2 - PANDAS</div>
+</section>
+
+<!-- 17 -->
+<section>
+  <div class="kicker">Criterio</div>
+  <h2>Explorar en el cliente, producir desde el servidor</h2>
+  <table class="gt">
+    <tr><th>Camino</th><th class="n">Resultado</th><th>Cuando</th></tr>
+    <tr><td><code>find</code> y <code>json_normalize</code></td><td class="n">44 columnas<br>13 casi vacias</td><td>Explorando, sin saber que campos interesan</td></tr>
+    <tr><td><code>$project</code> en el servidor</td><td class="n">10 columnas</td><td>Se sabe que hace falta</td></tr>
+    <tr><td><code>$group</code> en el servidor</td><td class="n">30 filas</td><td>El resultado es mucho menor que el origen</td></tr>
+  </table>
+  <div class="box small mt">
+    Las columnas casi vacias no son un defecto de pandas: son la variabilidad real
+    del esquema, hecha visible. Es el mismo fenomeno de la sesion 2.4.
+  </div>
+  <div class="box key small">
+    Es el mismo criterio de la sesion 2.2: mover el trabajo hacia donde viven los
+    datos.
+  </div>
+  <div class="foot">SESION 3.2 - PANDAS</div>
+</section>
+
+<!-- 18 -->
+<section>
+  <div class="kicker">El monto, tercera vez</div>
+  <h2>La decision del tipo se toma una sola vez</h2>
+  <table class="gt">
+    <tr><th>Sesion</th><th>Que paso con el monto</th></tr>
+    <tr><td>2.1</td><td>Se declaro <code>NUMERIC(12,2)</code>, aritmetica exacta</td></tr>
+    <tr><td>2.2</td><td>pandas lo convirtio a <code>float64</code> al leer</td></tr>
+    <tr><td>3.1</td><td>La carga a MongoDB lo almaceno como float de BSON</td></tr>
+    <tr><td>3.2</td><td>Ya nacio flotante. No hay nada que perder</td></tr>
+  </table>
+  <div class="box key small mt">
+    La decision sobre el tipo se toma <strong>una vez</strong>, en el
+    almacenamiento. Todo lo que viene despues la hereda, y recuperarla mas
+    adelante no es posible.
+  </div>
+  <div class="box small">
+    Si el importe debe ser exacto: <code>Decimal128</code> en BSON y
+    <code>Decimal</code> en Python.
+  </div>
+  <div class="foot">SESION 3.2 - TIPOS</div>
+</section>
+
+<!-- 19 -->
+<section>
+  <div class="kicker">Cierre</div>
+  <h2>Lo que queda planteado</h2>
+  <ul class="check small">
+    <li>La canalizacion es una tuberia, y el orden de las etapas lo decide quien consulta</li>
+    <li>$unwind no tiene equivalente en SQL, y descarta en silencio</li>
+    <li>Los indices se leen con el mismo diagnostico de la sesion 2.5</li>
+    <li>La validacion de esquema recupera parte de lo que 3.1 mostro ausente</li>
+  </ul>
+  <div class="box key small">
+    <strong>Pregunta que cierra el capitulo:</strong> con todo esto sobre la mesa,
+    y sabiendo que PostgreSQL tambien almacena, indexa y consulta documentos, en
+    que casos conviene cada uno. Es lo que se evalua en la sesion 3.3.
+  </div>
+  <div class="box small">
+    Trabajo para la proxima sesion: partes A a E del taller, y completar los
+    puntos 2 y 3 de la ficha de MongoDB.
+  </div>
+  <div class="foot">SESION 3.2 - CIERRE</div>
+</section>
+
+<!-- 20 -->
+<section>
+  <div class="kicker">Materiales de la sesion</div>
+  <h2>Archivos de trabajo</h2>
+  <table class="gt">
+    <tr><th>Archivo</th><th>Contenido</th></tr>
+    <tr><td><code>c3_s2_b0_diagramas.py</code></td><td>Render de las tres figuras</td></tr>
+    <tr><td><code>c3_s2_b1_preparacion.md</code></td><td>Verificacion del entorno</td></tr>
+    <tr><td><code>c3_s2_b1_verifica.py</code></td><td>Comprueba que el servidor admite lo que usa la sesion</td></tr>
+    <tr><td><code>c3_s2_b2_agregacion.py</code></td><td>Siete bloques, de las etapas al orden</td></tr>
+    <tr><td><code>c3_s2_b3_indices.py</code></td><td>Indices, planes y validacion de esquema</td></tr>
+    <tr><td><code>c3_s2_b4_pandas.py</code></td><td>Del documento anidado al dataframe plano</td></tr>
+    <tr><td><code>c3_s2_b5_taller.md</code></td><td>Taller evaluable</td></tr>
+  </table>
+  <div class="foot">SESION 3.2 - MATERIALES</div>
+</section>
+
+<!-- 21 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Siguiente sesion</div>
+    <div class="big">3.3 Criterios<br>de seleccion</div>
+    <div class="sub">MongoDB frente a JSONB, y la matriz de decision</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>

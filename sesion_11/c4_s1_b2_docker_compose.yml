@@ -1,0 +1,65 @@
+# =====================================================================
+# c4_s1_b2_docker_compose.yml
+# Sesion 4.1: entorno de Redis para el curso
+#
+# Levantar:    docker compose -f c4_s1_b2_docker_compose.yml up -d
+# Estado:      docker compose -f c4_s1_b2_docker_compose.yml ps
+# Consola:     docker exec -it curso_redis redis-cli
+# Detener:     docker compose -f c4_s1_b2_docker_compose.yml stop
+# Borrar todo: docker compose -f c4_s1_b2_docker_compose.yml down -v
+#
+# Tercer motor del curso. PostgreSQL y MongoDB siguen activos: el
+# capitulo 4 los usa como origen de los datos que Redis guarda en cache.
+# =====================================================================
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: curso_redis
+
+    # --requirepass activa la autenticacion. Sin ella, cualquier proceso
+    # del equipo puede leer y escribir la base sin credencial.
+    #
+    # --appendonly yes habilita la bitacora de operaciones. Para una
+    # cache no haria falta, y se activa aqui para que la sesion pueda
+    # discutir la diferencia entre persistir y garantizar durabilidad.
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+    volumes:
+      - redisdata:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+volumes:
+  redisdata:
+
+# ---------------------------------------------------------------------
+# Sobre maxmemory y la politica de desalojo
+#
+# maxmemory limita cuanta memoria puede usar Redis. Al alcanzarla, la
+# politica decide que hacer.
+#
+#   allkeys-lru     elimina las claves menos usadas recientemente
+#   volatile-lru    solo elimina las que tienen expiracion declarada
+#   noeviction      rechaza las escrituras nuevas
+#
+# allkeys-lru es la politica adecuada para una cache: el dato se puede
+# reconstruir, de modo que desalojarlo es aceptable.
+#
+# noeviction seria la eleccion si Redis guardara el unico ejemplar de un
+# dato, que es justamente el uso que esta sesion desaconseja.
+# ---------------------------------------------------------------------
