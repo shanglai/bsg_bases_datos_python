@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesion final - Redis, BigQuery y proyecto</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css" id="theme">
+<style>
+:root{
+  --azul:#004BB7; --ink:#1c2733; --muted:#56646f; --line:#d8dde3;
+  --aws:#ec7211; --teal:#0f8a6a; --coral:#d85a30; --amber:#ba7517; --rojo:#d4373a;
+  --font:Arial, Helvetica, "Helvetica Neue", sans-serif;
+  --logo:url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4yLjEsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM1MCA0OS41NSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzUwIDQ5LjU1OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRjBGMEYwO30NCgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6I0I1QzgzMjtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiNCNUM4MzI7fQ0KCS5zdDN7ZmlsbDojNTg1ODU3O30NCgkuc3Q0e2ZpbGw6I0FGQ0EwQTt9DQoJLnN0NXtmaWxsOiNGRkZGRkY7fQ0KCS5zdDZ7ZmlsbDojMzE0MjVGO30NCgkuc3Q3e2ZpbGw6I0UzODQzMjt9DQoJLnN0OHtmaWxsOm5vbmU7c3Ryb2tlOiMzNzQ1OEQ7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCTxnPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMjQuNzcsMEMxMS4xMSwwLDAsMTEuMTIsMCwyNC43N2MwLDEzLjY2LDExLjExLDI0Ljc4LDI0Ljc3LDI0Ljc4YzEzLjY2LDAsMjQuNzctMTEuMTIsMjQuNzctMjQuNzgNCgkJCUM0OS41NSwxMS4xMiwzOC40NCwwLDI0Ljc3LDB6IE0yNC43Nyw0NC41OWMtMTAuOTMsMC0xOS44Mi04Ljg5LTE5LjgyLTE5LjgyYzAtMTAuOTMsOC44OS0xOS44MiwxOS44Mi0xOS44Mg0KCQkJYzEwLjkzLDAsMTkuODIsOC44OSwxOS44MiwxOS44MkM0NC41OSwzNS43MSwzNS43LDQ0LjU5LDI0Ljc3LDQ0LjU5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q0IiBkPSJNMzkuNjQsMjQuNzhjMCw4LjIxLTYuNjYsMTQuODctMTQuODcsMTQuODdjLTguMiwwLTE0Ljg2LTYuNjYtMTQuODYtMTQuODdjMC04LjIxLDYuNjYtMTQuODYsMTQuODYtMTQuODYNCgkJCUMzMi45OCw5LjkxLDM5LjY0LDE2LjU3LDM5LjY0LDI0Ljc4eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTEzNS42MywyMy45M3Y1LjA1aDE0Ljc5Yy0wLjAyLDMuMjEtMS4zLDUuNzgtMy44NCw3Ljc0Yy0yLjUyLDEuOTYtNS42MywyLjkzLTkuMzEsMi45Mw0KCQkJYy00Ljg0LDAtOC41OS0xLjI5LTExLjIzLTMuODVjLTIuNjUtMi41OC00LTYuMjMtNC0xMC45N2MwLTQuNjUsMS4zMy04LjMsMy45My0xMC45NWMyLjY0LTIuNjMsNi4yOS0zLjk2LDEwLjk4LTMuOTYNCgkJCWMzLjg2LDAsNy4wNywxLjA3LDguOTgsMi40N2MyLjE1LDEuNTUsNC4zOCwzLjcsNC40OSw3Ljg2aDQuOThjLTAuMzctNi44My0zLjgtMTAuMjMtNy4zMi0xMi40NWMtMy0xLjkzLTYuNzItMi44Ny0xMS4xOC0yLjg3DQoJCQljLTYsMC0xMC43OSwxLjc4LTE0LjQsNS4zOWMtMC42LDAuNi0xLjEzLDEuMjUtMS42MywxLjkxYy0wLjYzLTEuNzktMS43Ny0zLjI4LTMuMzgtNC40NWMtMi42NC0xLjkxLTYuMzktMi44NC0xMS4yMi0yLjg0DQoJCQljLTUuMTEsMC05LjEzLDEuMDMtMTIuMDksM2MtMC43OSwwLjUzLTEuNDYsMS4xMS0yLjA0LDEuNzNjLTAuNjctMS4yMi0xLjYzLTIuMjQtMi45LTMuMDNjLTAuOTItMC42MS0yLjExLTEuMDItMy41MS0xLjMNCgkJCWMtMS40LTAuMjYtMy40Mi0wLjM5LTYuMDgtMC4zOUg2MS45NHYzOS42M2gxNy44NmMzLjE4LDAsNS41OS0wLjI0LDcuMjctMC43NWMxLjY4LTAuNSwzLjExLTEuMzQsNC4zNC0yLjU1DQoJCQljMC4yNi0wLjI1LDAuNTEtMC41MiwwLjc0LTAuOGMwLjM0LDAuMzIsMC43LDAuNjQsMS4wOSwwLjkzYzIuODQsMi4xLDYuODMsMy4xNiwxMS45OCwzLjE2YzUuNjEsMCw5Ljk3LTEuMDYsMTMuMDctMy4xNg0KCQkJYzEuMzQtMC45MSwyLjM4LTEuOTksMy4xNC0zLjIxYzAuNDEsMC40OCwwLjg1LDAuOTMsMS4zMiwxLjM2YzMuNjEsMy4zNyw4LjQ0LDUuMDQsMTQuNTEsNS4wNGM0Ljk3LDAsOS4xNS0xLjMzLDEyLjUxLTQuMDENCgkJCWMzLjc5LTMuMDIsNS42Ny03LjE4LDUuNjctMTIuNWMwLTAuNzctMC4xMS0yLjE2LTAuMy00LjE5SDEzNS42M3ogTTk4LjA0LDEwLjk1YzEuODQtMS4xOSw0LjUxLTEuNzgsOC4wMi0xLjc4DQoJCQljMy4wMSwwLDUuNCwwLjU4LDcuMTcsMS43NGMxLjc4LDEuMTgsMi43OCwyLjgzLDIuOTksNC45N2wyLjU4LTAuMDJjLTEuMDQsMi40NC0xLjYsNS4yMS0xLjY4LDguMzINCgkJCWMtMS43NS0wLjY5LTMuOTctMS4yNi02LjY5LTEuNjljLTAuOTgtMC4xOC0yLjMzLTAuNC00LjAzLTAuNjZjLTQuOS0wLjc2LTcuNzYtMS4zNy04LjU1LTEuNzhjLTAuOTMtMC40NC0xLjU5LTAuOTgtMS45Ni0xLjU5DQoJCQljLTAuNDEtMC42LTAuNjItMS4zNy0wLjYyLTIuMzNDOTUuMjYsMTMuODgsOTYuMTgsMTIuMTYsOTguMDQsMTAuOTV6IE02Ni44OSw5LjMxaDExLjQ4YzMuNjMsMCw2LjA5LDAuNDUsNy40LDEuMzQNCgkJCWMxLjI3LDAuODcsMS45MSwyLjQsMS45MSw0LjU5YzAsMi4yMi0wLjcyLDMuOC0yLjE3LDQuNzFjLTEuNDYsMC45Ni0zLjkyLDEuNDMtNy40MiwxLjQzaC0xMS4yVjkuMzF6IE04Ni44OCwzOC4zOA0KCQkJYy0xLjQsMS4wOC0zLjc0LDEuNi03LjAzLDEuNkg2Ni44OVYyNS45MWgxMS45MmMzLjc5LDAsNi40NCwwLjU0LDcuOTMsMS42M0M4OC4yMywyOC42NCw4OSwzMC40OSw4OSwzMy4xDQoJCQlDODksMzUuNTYsODguMjksMzcuMzIsODYuODgsMzguMzh6IE0xMTQuNDMsMzguNDFjLTIuMDYsMS4zNC00Ljg1LDIuMDEtOC4zNywyLjAxYy0zLjU3LDAtNi4zNS0wLjcxLTguMzYtMi4xMQ0KCQkJYy0xLjk1LTEuMzgtMy4wMy0zLjMyLTMuMjMtNS44NGMtMC4xNS0yLjM2LTAuODktNC4yOC0yLjIxLTUuOGMtMS41LTEuNy0zLjY0LTIuNzctNi40My0zLjIxYzIuMTQtMC40OCwzLjgtMS4zNyw1LjA0LTIuNjENCgkJCWMwLjA0LDAuMDcsMC4wNiwwLjE0LDAuMSwwLjJjMC44NiwxLjM4LDIuMTgsMi41NCw0LjAyLDMuNDljMS42NiwwLjgyLDQuODQsMS41OCw5LjUsMi4zMWwwLjQ5LDAuMDdjMC42NiwwLjEsMS42LDAuMjQsMi44MiwwLjQyDQoJCQljMy41NywwLjU4LDUuNzIsMC45OSw2LjQ1LDEuMjljMS4xMSwwLjQ5LDEuOTIsMS4xLDIuNDYsMS44YzAuNTMsMC43MiwwLjc5LDEuNTgsMC43OSwyLjU2DQoJCQlDMTE3LjQ5LDM1LjI3LDExNi40NywzNy4wOCwxMTQuNDMsMzguNDF6Ii8+DQoJCTxyZWN0IHg9IjE2Ny44MyIgeT0iNC45NCIgY2xhc3M9InN0NSIgd2lkdGg9IjUuMDciIGhlaWdodD0iMzkuNjkiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIwMi4xMywxOC40NmMtMC43LTEuMDItMS43Ny0xLjgzLTMuMTYtMi40NmMtMS40MS0wLjY0LTIuOTUtMC45NS00LjYyLTAuOTVjLTMuODUsMC02Ljc5LDEuNTktOC44NSw0Ljc4DQoJCQl2LTQuMTJoLTQuMjR2MjguOTJ2MGg0LjcyVjI4Ljg0YzAtMy43MSwwLjczLTYuMjEsMi4xNy03LjU2YzEuNDYtMS4zMywzLjItMS45OSw1LjIxLTEuOTljMS4yNSwwLDIuMzUsMC4yOSwzLjI5LDAuODgNCgkJCWMwLjkzLDAuNiwxLjU4LDEuMzksMS45NCwyLjM4YzAuMzgsMC45OSwwLjU1LDIuNDgsMC41NSw0LjQ2djE3LjYxaDQuNzJWMjYuODRjMC0yLjI1LTAuMDktMy44NS0wLjI2LTQuNzQNCgkJCUMyMDMuMzEsMjAuNjgsMjAyLjgzLDE5LjQ3LDIwMi4xMywxOC40NnoiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTIyOC4wNSwyOC43OWMtMS4zMS0wLjU4LTMuNjUtMS4zMi02Ljk3LTIuMjRjLTIuMzEtMC42OC0zLjctMS4wOC00LjE3LTEuMjVjLTAuODItMC4zNS0xLjQzLTAuNzgtMS44LTEuMzMNCgkJCWMtMC4zOS0wLjQ4LTAuNTgtMS4wNi0wLjU4LTEuNzFjMC0wLjk4LDAuNDYtMS44MywxLjM4LTIuNThjMC45Mi0wLjczLDIuNDctMS4xMSw0LjY0LTEuMTFjMS44MywwLDMuMjUsMC40Miw0LjI0LDEuMjUNCgkJCWMxLDAuODMsMS42MSwxLjk3LDEuODIsMy40Nmw0LjYyLTAuNjVjLTAuMy0xLjg2LTAuODQtMy4zNS0xLjYzLTQuNDZjLTAuNzgtMS4xMS0yLjAxLTEuOTctMy42Ni0yLjY0DQoJCQljLTEuNjMtMC42NC0zLjU1LTAuOTgtNS43NC0wLjk4Yy0xLjQ1LDAtMi44MSwwLjIxLTQuMDcsMC41OGMtMS4yNywwLjQtMi4yNywwLjg2LTIuOTksMS40M2MtMC45OSwwLjczLTEuNzUsMS42MS0yLjMxLDIuNzINCgkJCWMtMC41NywxLjEtMC44NywyLjI5LTAuODcsMy41N2MwLDEuNDEsMC4zNSwyLjcsMS4wNCwzLjg2YzAuNjksMS4xNiwxLjcsMi4wOCwzLjAyLDIuNzRjMS4zNCwwLjY2LDMuNzQsMS40NSw3LjIxLDIuMzUNCgkJCWMyLjU3LDAuNjcsNC4xNSwxLjIyLDQuODEsMS42NGMwLjkzLDAuNjUsMS4zOCwxLjUyLDEuMzgsMi42MWMwLDEuMjItMC41MywyLjI4LTEuNTcsMy4yYy0xLjA0LDAuOTItMi42NCwxLjM3LTQuODIsMS4zNw0KCQkJYy0yLjE0LDAtMy44MS0wLjUxLTUuMDEtMS41M2MtMS4yLTEuMDQtMS45Mi0yLjUxLTIuMTktNC40NWwtNC42NiwwLjc3YzAuNTQsMy4wNCwxLjczLDUuMzYsMy42NCw2Ljg5DQoJCQljMS44OCwxLjU1LDQuNjQsMi4zMyw4LjI2LDIuMzNjMi4xNywwLDQuMTMtMC4zOCw1Ljg2LTEuMThjMS43My0wLjc5LDMuMDUtMS45LDMuOTgtMy4zMmMwLjktMS40NiwxLjM1LTIuOTYsMS4zNS00LjYNCgkJCWMwLTEuNjYtMC4zNi0zLjA0LTEuMTItNC4xN0MyMzAuNCwzMC4yMywyMjkuMzksMjkuMzgsMjI4LjA1LDI4Ljc5eiIvPg0KCQk8cGF0aCBjbGFzcz0ic3Q1IiBkPSJNMjk3LjIyLDMwLjAyYzAsMy43Mi0wLjIzLDUuMTktMC40Miw1Ljc3Yy0wLjQsMS4yMy0xLjExLDIuMi0yLjE0LDIuOTVjLTEuMDcsMC43Ny0yLjM3LDEuMTQtMy45MSwxLjE0DQoJCQljLTEuNTQsMC0yLjg4LTAuNC0zLjk2LTEuMTdjLTEuMDktMC43OC0xLjgxLTEuNzktMi4yLTMuMTFjLTAuMjgtMC45OC0wLjQxLTIuODctMC40MS01LjU5VjE1LjA2aC00LjY3djE1LjMyDQoJCQljMCwzLjY2LDAuNCw2LjM2LDEuMiw4LjIxYzAuODMsMS44OSwyLjEzLDMuNDIsMy44Myw0LjQ2YzEuNjYsMS4wNiwzLjc2LDEuNTgsNi4yMiwxLjU4YzIuNDYsMCw0LjU0LTAuNTMsNi4yMS0xLjU4DQoJCQljMS42OS0xLjA1LDIuOTQtMi41NSwzLjc3LTQuNGMwLjgzLTEuODYsMS4yNC00LjQ3LDEuMjQtOC4wNVYxNS4wNmgtNC43NlYzMC4wMnoiLz4NCgkJPHBvbHlnb24gY2xhc3M9InN0NSIgcG9pbnRzPSIyNDMuNDMsNS44MyAyMzguNzQsNS44MyAyMzguNzQsMTUuODcgMjM1LjI4LDE1Ljg3IDIzNS4yOCwxOS42NSAyMzguNzQsMTkuNjUgMjM4Ljc0LDQ0LjYzIA0KCQkJMjQzLjQzLDQ0LjYzIDI0My40MywxOS42NSAyNDguMTcsMTkuNjUgMjQ4LjE3LDE1Ljg3IDI0My40MywxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI3MC4yNCw1LjgzIDI2NS41NSw1LjgzIDI2NS41NSwxNS44NyAyNjIuMSwxNS44NyAyNjIuMSwxOS42NSAyNjUuNTUsMTkuNjUgMjY1LjU1LDQ0LjYzIA0KCQkJMjcwLjI0LDQ0LjYzIDI3MC4yNCwxOS42NSAyNzQuOTgsMTkuNjUgMjc0Ljk4LDE1Ljg3IDI3MC4yNCwxNS44NyAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjMxNC45Myw1LjgzIDMxMC4yNSw1LjgzIDMxMC4yNSwxNS44NyAzMDYuNzksMTUuODcgMzA2Ljc5LDE5LjY1IDMxMC4yNSwxOS42NSAzMTAuMjUsNDQuNjMgDQoJCQkzMTQuOTMsNDQuNjMgMzE0LjkzLDE5LjY1IDMxOS42OCwxOS42NSAzMTkuNjgsMTUuODcgMzE0LjkzLDE1Ljg3IAkJIi8+DQoJCTxyZWN0IHg9IjI1Mi44IiB5PSIxNS44NyIgY2xhc3M9InN0NSIgd2lkdGg9IjQuNzEiIGhlaWdodD0iMjguNzYiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTI1NS4xNSw1LjgzYy0xLjk1LDAtMy41MywxLjU4LTMuNTMsMy41M2MwLDEuOTUsMS41OCwzLjUzLDMuNTMsMy41M2MxLjk1LDAsMy41NS0xLjU5LDMuNTUtMy41Mw0KCQkJQzI1OC43LDcuNDEsMjU3LjEsNS44MywyNTUuMTUsNS44M3oiLz4NCgkJPHBhdGggY2xhc3M9InN0NSIgZD0iTTM0OS45NCwzMS4xM2MwLjAzLTAuNDIsMC4wNi0wLjg1LDAuMDYtMS4yN2MwLTEtMC4xLTEuOTQtMC4yOC0yLjg5Yy0xLjI5LTYuNzgtNy4wNy0xMS45MS0xNC0xMS45MQ0KCQkJYy03Ljg3LDAtMTQuMyw2LjY0LTE0LjMsMTQuNzljMCw4LjE1LDYuNDMsMTQuNzgsMTQuMywxNC43OGM1Ljg5LDAsMTAuOTQtMy43MSwxMy4xMy05bC00LjE1LTAuNjgNCgkJCWMtMS43NCwzLjI4LTUuMTEsNS41Mi04Ljk4LDUuNTJjLTUuMjQsMC05LjU3LTQuMDgtMTAuMTgtOS4zNWgyMC4zNkgzNDkuOTR6IE0zMjUuODUsMjYuOTdjMS4yMy00LjQ2LDUuMTctNy43Myw5Ljg3LTcuNzMNCgkJCWM0LjY5LDAsOC42NiwzLjI4LDkuODcsNy43M0gzMjUuODV6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=");
+}
+.reveal{ font-family:var(--font); font-size:42px; color:var(--ink); font-weight:400; }
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ height:100%; }
+.reveal h1,.reveal h2,.reveal h3{ font-family:var(--font); color:var(--ink); font-weight:700;
+  text-transform:none; letter-spacing:-0.3px; line-height:1.12; margin-bottom:0.3em; }
+.reveal h1{ font-size:1.5em; }
+.reveal h2{ font-size:1.22em; }
+.reveal h3{ font-size:1.0em; color:var(--azul); }
+.reveal p,.reveal li{ line-height:1.42; }
+.reveal ul,.reveal ol{ margin-left:0.2em; }
+.reveal li{ margin-bottom:0.42em; }
+.reveal strong{ color:var(--azul); font-weight:700; }
+.reveal em{ color:var(--coral); font-style:normal; font-weight:700; }
+.reveal code{ font-family:"Consolas","Menlo",monospace; font-size:0.9em; background:#f2f4f7;
+  padding:0.05em 0.25em; border-radius:4px; }
+.reveal pre{ box-shadow:none; width:100%; font-size:0.3em; }
+.reveal pre code{ background:#f7f9fc; border:1px solid var(--line); border-radius:8px;
+  padding:0.8em; max-height:none; }
+.reveal section img{ background:none; border:none; box-shadow:none; }
+.reveal .slides section::after{ content:""; position:absolute; bottom:18px; right:22px;
+  width:150px; height:26px; background-image:var(--logo);
+  background-repeat:no-repeat; background-size:contain; background-position:right center;
+  opacity:0.85; pointer-events:none; }
+.reveal .slides section.azul::after{ filter:brightness(0) invert(1); opacity:0.95; }
+.reveal .slides section.azul,
+.reveal .slides section.azul h1,.reveal .slides section.azul h2,.reveal .slides section.azul h3,
+.reveal .slides section.azul p,.reveal .slides section.azul li,
+.reveal .slides section.azul strong,.reveal .slides section.azul em{ color:#ffffff; }
+.reveal .slides section.azul .kicker{ color:#bcd3ff; }
+.reveal .slides section.azul .sub{ color:#d6e4ff; }
+.reveal .slides section.azul .meta{ color:#9bbcf0; }
+.kicker{ font-family:var(--font); font-size:0.42em; letter-spacing:3px; text-transform:uppercase;
+  color:var(--azul); font-weight:700; margin-bottom:0.6em; }
+.cover{ display:flex; flex-direction:column; justify-content:center; height:100%; }
+.cover .big{ font-size:1.5em; line-height:1.04; font-weight:700; }
+.cover .sub{ font-size:0.56em; color:var(--muted); margin-top:0.5em; font-weight:400; }
+.cover .meta{ font-size:0.34em; color:var(--muted); margin-top:1.3em; letter-spacing:1px; }
+.foot{ position:absolute; bottom:16px; left:0; right:0; font-size:0.3em; color:var(--muted);
+  letter-spacing:1px; text-align:left; }
+.azul .foot{ color:#9bbcf0; }
+.box{ border-left:6px solid var(--azul); background:#f3f7fd; border-radius:0 10px 10px 0;
+  padding:0.5em 0.7em; margin-top:0.4em; font-size:0.78em; }
+.box.key{ border-left-color:var(--teal); background:#f0faf6; }
+.box.warn{ border-left-color:var(--rojo); background:#fdeeee; }
+.box.aws{ border-left-color:var(--aws); background:#fdf3ea; }
+.check li{ list-style:none; position:relative; padding-left:1.3em; }
+.check li::before{ content:"-"; position:absolute; left:0; color:var(--azul); font-weight:700; }
+.gt{ width:100%; border-collapse:collapse; font-size:0.56em; margin-top:0.3em; }
+.gt th{ text-align:left; font-size:0.84em; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); padding:0.32em 0.4em; border-bottom:2px solid var(--ink); }
+.gt td{ padding:0.36em 0.4em; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.3; }
+.gt tr:last-child td{ border-bottom:none; }
+.gt .n{ color:var(--rojo); font-weight:700; width:8%; }
+.gt.tight{ font-size:0.5em; }
+.small{ font-size:0.66em; }
+.tiny{ font-size:0.52em; color:var(--muted); }
+.mt{ margin-top:0.5em; }
+.fig{ text-align:center; margin-top:0.2em; }
+.fig img{ max-height:440px; width:auto; }
+.fig.alto img{ max-height:400px; }
+.cap{ font-size:0.32em; color:var(--muted); text-align:center; margin-top:0.2em; }
+.two{ display:grid; grid-template-columns:1fr 1fr; gap:0.8em; align-items:start; }
+.reveal .progress{ color:var(--azul); height:5px; }
+.reveal .controls{ color:var(--azul); }
+</style>
+</head><body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Sesion final</div>
+    <div class="big">Redis, BigQuery<br>y el cierre</div>
+    <div class="sub">Todo en GCP, sin instalar nada</div>
+    <div class="meta">Bases de Datos y SQL con Python - BSG Institute</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="kicker">Como funciona esta sesion</div>
+  <h2>Dos tecnologias en dos horas</h2>
+  <div class="box warn small">
+    Redis y BigQuery tienen libros enteros dedicados. Hoy se ven en la
+    superficie, con ejercicios guiados, y se cierra con el proyecto final.
+  </div>
+  <table class="gt">
+    <tr><th class="n">Min.</th><th>Bloque</th></tr>
+    <tr><td class="n">10</td><td>Acceso y verificacion</td></tr>
+    <tr><td class="n">30</td><td>Redis: para que sirve, y ejercicio</td></tr>
+    <tr><td class="n">45</td><td>BigQuery: columnas, costo, anidamiento, y ejercicio</td></tr>
+    <tr><td class="n">25</td><td>Proyecto final</td></tr>
+    <tr><td class="n">10</td><td>Cierre del curso</td></tr>
+  </table>
+  <div class="box key small">
+    No hay instalacion. Todo corre en la consola de GCP y en Cloud Shell, con las
+    cuentas que ya tienen asignadas.
+  </div>
+  <div class="foot">SESION FINAL - APERTURA</div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="kicker">El hueco que quedaba</div>
+  <h2>Dos preguntas sin respuesta</h2>
+  <table class="gt">
+    <tr><th>Pregunta</th><th>Motor</th></tr>
+    <tr><td>Como respondo en microsegundos durante la autorizacion, sin ir a la base mil veces por segundo</td><td><strong>Redis</strong></td></tr>
+    <tr><td>Como analizo dos anos de operaciones sin que cada consulta tarde horas</td><td><strong>BigQuery</strong></td></tr>
+  </table>
+  <div class="box key small mt">
+    Ninguno de los tres motores anteriores responde bien estas dos. Y ninguno de
+    los dos de hoy sustituye a los anteriores.
+  </div>
+  <div class="foot">SESION FINAL - APERTURA</div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="kicker">Redis</div>
+  <h2>Responde por clave, nunca por contenido</h2>
+  <table class="gt">
+    <tr><th></th><th>PostgreSQL</th><th>Redis</th></tr>
+    <tr><td>Se accede</td><td>Por contenido, con SQL</td><td>Por clave</td></tr>
+    <tr><td>Esquema</td><td>Declarado y aplicado</td><td>No hay</td></tr>
+    <tr><td>Combinaciones</td><td>Si</td><td>No existen</td></tr>
+    <tr><td>Donde vive</td><td>Disco</td><td>Memoria</td></tr>
+    <tr><td>Si se reinicia</td><td>El dato esta</td><td>Puede perderse</td></tr>
+    <tr><td>Expiracion</td><td>Manual</td><td>Propiedad de la clave</td></tr>
+  </table>
+  <div class="box key small mt">
+    Ese ultimo renglon define el uso: Redis guarda lo que se puede
+    <strong>reconstruir</strong>. Una cache, un contador, un ranking. No el
+    registro de la transaccion.
+  </div>
+  <div class="foot">SESION FINAL - REDIS</div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="kicker">Las cinco estructuras</div>
+  <h2>Se elige por la operacion, no por el dato</h2>
+  <table class="gt">
+    <tr><th>Estructura</th><th>Para</th><th>Comando</th></tr>
+    <tr><td>Cadena</td><td>Un valor, un contador</td><td><code>GET</code>, <code>INCR</code></td></tr>
+    <tr><td>Diccionario</td><td>Objeto con campos sueltos</td><td><code>HGET</code>, <code>HINCRBY</code></td></tr>
+    <tr><td>Lista</td><td>Cola por orden de llegada</td><td><code>RPUSH</code>, <code>LPOP</code></td></tr>
+    <tr><td>Conjunto</td><td>Pertenencia sin repetidos</td><td><code>SADD</code>, <code>SISMEMBER</code></td></tr>
+    <tr><td>Conjunto ordenado</td><td>Ranking por puntaje</td><td><code>ZADD</code>, <code>ZREVRANGE</code></td></tr>
+  </table>
+  <div class="box small mt">
+    El conjunto ordenado no tiene equivalente comodo en los otros motores: el
+    ranking se mantiene ordenado solo, y consultarlo no requiere ordenar nada.
+  </div>
+  <div class="foot">SESION FINAL - REDIS</div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="kicker">El caso de uso real</div>
+  <h2>Un limitador de intentos</h2>
+  <pre><code class="language-python">def intentos_recientes(r, id_tarjeta, ventana=60):
+    clave = f"limite:tarjeta:{id_tarjeta}"
+    valor = r.incr(clave)
+    if valor == 1:              # primera vez en la ventana
+        r.expire(clave, ventana)
+    return valor</code></pre>
+  <div class="box key small">
+    <code>INCR</code> es atomico. Dos procesos simultaneos obtienen valores
+    distintos y solo <strong>uno</strong> recibe 1. Ese fija la expiracion.
+  </div>
+  <div class="box warn small">
+    En PostgreSQL esto seria un <code>UPDATE</code> dentro de una transaccion, por
+    cada intento, de cada tarjeta. Funciona, y ocupa conexiones que son un recurso
+    limitado.
+  </div>
+  <div class="box small">
+    El argumento que justifica Redis aqui es la <strong>concurrencia</strong>, no
+    la velocidad de una consulta aislada.
+  </div>
+  <div class="foot">SESION FINAL - REDIS</div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="kicker">Ejercicio 1</div>
+  <h2>Redis, en Cloud Shell</h2>
+  <pre><code class="language-bash">pip install redis --quiet
+python c4_final_b4_redis_alumno.py HOST TU_USUARIO TU_CLAVE</code></pre>
+  <div class="box small">
+    Cada quien tiene su propio usuario y solo puede escribir claves que empiecen
+    con su nombre de usuario. Escribir en el prefijo de otro devuelve
+    <code>NOPERM</code>, y es a proposito.
+  </div>
+  <div class="box key small">
+    Asi se hace multi-tenencia en un almacen clave-valor: no hay esquemas ni bases
+    separadas por permiso, de modo que el aislamiento se consigue con convencion
+    de nombres mas permisos.
+  </div>
+  <div class="box warn small">
+    <code>KEYS *</code> esta prohibido para todos. Recorre el espacio completo de
+    claves y bloquea el servidor. Se usa <code>SCAN</code>.
+  </div>
+  <div class="foot">SESION FINAL - EJERCICIO</div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="kicker">BigQuery</div>
+  <h2>Un almacen analitico, no una base transaccional</h2>
+  <table class="gt">
+    <tr><th></th><th>PostgreSQL</th><th>BigQuery</th></tr>
+    <tr><td>Almacenamiento</td><td>Por filas</td><td>Por columnas</td></tr>
+    <tr><td>Servidor</td><td>Se administra</td><td>No hay, es serverless</td></tr>
+    <tr><td>Se cobra por</td><td>Servidor encendido</td><td>Bytes leidos por consulta</td></tr>
+    <tr><td>Acelera con</td><td>Indices</td><td>Particion y agrupamiento</td></tr>
+    <tr><td>Escala</td><td>Vertical y replicas</td><td>Automatico</td></tr>
+    <tr><td>Actualizar una fila</td><td>Normal</td><td>Caro y limitado</td></tr>
+    <tr><td>Llaves foraneas</td><td>Aplicadas</td><td>Se declaran, no se aplican</td></tr>
+  </table>
+  <div class="box key small mt">
+    No compiten. PostgreSQL registra la operacion; BigQuery analiza el historico.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 9 -->
+<section>
+  <div class="kicker">Lo que mas cambia el dia a dia</div>
+  <h2>Se paga por bytes leidos</h2>
+  <div class="fig alto"><img src="c4_final_d2_costo.png" alt="El costo en BigQuery"></div>
+  <div class="cap">Figura 1. El editor muestra el estimado antes de ejecutar. Conviene mirarlo siempre</div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <div class="kicker">La regla que se llevan</div>
+  <h2>SELECT * es caro aunque lleve LIMIT</h2>
+  <pre><code class="language-sql">-- Lee TODAS las columnas. El LIMIT recorta lo que se DEVUELVE.
+SELECT * FROM `proyecto.pagos.operaciones` LIMIT 10;
+
+-- Lee solo dos columnas.
+SELECT estatus, COUNT(*) FROM `proyecto.pagos.operaciones` GROUP BY estatus;</code></pre>
+  <div class="box warn small">
+    En PostgreSQL, un <code>LIMIT</code> sobre un indice si evita leer. Aqui no:
+    el limite se aplica despues de leer.
+  </div>
+  <div class="box key small">
+    En BigQuery se nombran las columnas, siempre. Es la diferencia entre una
+    consulta de centavos y una de dolares.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 11 -->
+<section>
+  <div class="kicker">Columnas con subcolumnas</div>
+  <h2>Lo que en el modelo relacional eran tablas</h2>
+  <pre><code class="language-sql">SELECT
+  comercio.nombre,                      -- RECORD: columna con subcolumnas
+  comercio.ciudad,
+  autorizacion.emisor.nombre,           -- tres niveles de anidamiento
+  autorizacion.riesgo.senales           -- REPEATED: varios valores
+FROM `proyecto.pagos.operaciones`;</code></pre>
+  <table class="gt tight">
+    <tr><th>Tipo</th><th>Equivalente relacional</th></tr>
+    <tr><td><code>RECORD</code></td><td>Una tabla de catalogo combinada</td></tr>
+    <tr><td><code>REPEATED</code></td><td>Una tabla de detalle</td></tr>
+  </table>
+  <div class="box key small mt">
+    Diferencia con JSONB de PostgreSQL: BigQuery almacena cada subcolumna por
+    separado, de modo que leer <code>comercio.nombre</code> NO lee el resto del
+    registro. JSONB lee el documento entero.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 12 -->
+<section>
+  <div class="kicker">Columnas repetidas</div>
+  <h2>UNNEST, con la misma trampa de siempre</h2>
+  <pre><code class="language-sql">-- Expande el arreglo a filas
+SELECT senal, COUNT(*) AS veces
+FROM `proyecto.pagos.operaciones`,
+     UNNEST(autorizacion.riesgo.senales) AS senal
+GROUP BY senal;
+
+-- Conserva las filas con arreglo vacio
+FROM `proyecto.pagos.operaciones`
+LEFT JOIN UNNEST(autorizacion.riesgo.senales) AS senal</code></pre>
+  <div class="box warn small">
+    <code>UNNEST</code> descarta las filas cuyo arreglo este vacio. Es exactamente
+    el comportamiento de <code>$unwind</code> de MongoDB, visto en la sesion 3.2.
+  </div>
+  <div class="box key small">
+    Tercera vez que aparece el mismo error en el curso: en SQL con
+    <code>LEFT JOIN</code> convertido en <code>INNER</code>, en MongoDB con
+    <code>$unwind</code>, y aqui.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 13 -->
+<section>
+  <div class="kicker">Particiones y agrupamiento</div>
+  <h2>Los indices de BigQuery, con otro nombre</h2>
+  <pre><code class="language-sql">CREATE TABLE ... PARTITION BY DATE(fecha_hora)
+                 CLUSTER BY estatus, metodo_captura</code></pre>
+  <table class="gt tight">
+    <tr><th></th><th>Particion</th><th>Agrupamiento</th></tr>
+    <tr><td>Qué hace</td><td>Divide la tabla por rango</td><td>Ordena dentro de cada particion</td></tr>
+    <tr><td>Se ve en</td><td>El estimado previo</td><td>Los bytes realmente cobrados</td></tr>
+    <tr><td>Se declara</td><td colspan="2">Al crear la tabla, no despues</td></tr>
+  </table>
+  <div class="box warn small mt">
+    <code>WHERE DATE(fecha_hora) = ...</code> <strong>anula</strong> la particion.
+    Es el mismo fenomeno de la sesion 2.5: una funcion sobre la columna inutiliza
+    la estructura que la acelera.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 14 -->
+<section>
+  <div class="kicker">Preparar y programar</div>
+  <h2>Dataform y la preparacion de datos</h2>
+  <table class="gt">
+    <tr><th>Herramienta</th><th>Que hace</th></tr>
+    <tr><td><strong>Data preparation</strong><br>en BigQuery Studio</td><td>Perfila los datos y sugiere limpiezas y transformaciones con Gemini. Se valida en vista previa antes de aplicar</td></tr>
+    <tr><td><strong>Dataform</strong></td><td>Programa esas preparaciones y las tablas derivadas. Control de versiones, revision de codigo y despliegue</td></tr>
+  </table>
+  <div class="box key small mt">
+    El patron: la tabla de origen se carga tal cual, y las tablas derivadas se
+    calculan una vez y se consultan muchas. Consultar el resumen diario cuesta una
+    fraccion de consultar el detalle.
+  </div>
+  <div class="box small">
+    Nota: Cloud Dataprep by Trifacta, que aparece en material antiguo, hoy es
+    producto de Alteryx y se factura aparte. Lo que lo sustituye de forma nativa
+    es lo de arriba.
+  </div>
+  <div class="foot">SESION FINAL - BIGQUERY</div>
+</section>
+
+<!-- 15 -->
+<section>
+  <div class="kicker">Ejercicio 2</div>
+  <h2>BigQuery, en la consola</h2>
+  <div class="box small">
+    BigQuery Studio, proyecto de la clase, conjunto de datos
+    <code>pagos</code>, tabla <code>operaciones</code>.
+  </div>
+  <table class="gt tight">
+    <tr><th class="n">#</th><th>Ejercicio</th></tr>
+    <tr><td class="n">1</td><td>Comparar el estimado de bytes de <code>SELECT *</code> contra el de dos columnas</td></tr>
+    <tr><td class="n">2</td><td>Importe por comercio, usando la subcolumna</td></tr>
+    <tr><td class="n">3</td><td>Frecuencia de cada senal de riesgo, con <code>UNNEST</code></td></tr>
+    <tr><td class="n">4</td><td>Comparar el estimado con y sin filtro de fecha</td></tr>
+    <tr><td class="n">5</td><td>Demostrar que <code>DATE(fecha_hora)</code> anula la particion</td></tr>
+  </table>
+  <div class="box key small mt">
+    En cada uno, anotar el estimado de bytes ANTES de ejecutar. Es el habito que
+    esta sesion busca dejar.
+  </div>
+  <div class="foot">SESION FINAL - EJERCICIO</div>
+</section>
+
+<!-- 16 -->
+<section>
+  <div class="kicker">Los tres juntos</div>
+  <h2>Cada uno en su momento</h2>
+  <div class="fig alto"><img src="c4_final_d1_arquitectura.png" alt="Los tres motores en el mismo sistema"></div>
+  <div class="cap">Figura 2. Redis durante la autorizacion, PostgreSQL al registrar, BigQuery al analizar</div>
+  <div class="foot">SESION FINAL - ARQUITECTURA</div>
+</section>
+
+<!-- 17 -->
+<section>
+  <div class="kicker">Proyecto final</div>
+  <h2>Que se pide</h2>
+  <div class="box key small">
+    Diseñar y <strong>sustentar</strong> la arquitectura de datos de un sistema.
+    No se pide construirlo.
+  </div>
+  <table class="gt">
+    <tr><th>Entregable</th><th>Contenido</th><th class="n">Peso</th></tr>
+    <tr><td>Documento</td><td>Modelo, matriz de decision, argumento</td><td class="n">60%</td></tr>
+    <tr><td>Codigo</td><td>Una porcion funcionando, con una decision evidenciada</td><td class="n">40%</td></tr>
+  </table>
+  <div class="box small mt">
+    El caso puede ser de su organizacion, uno de los escenarios de la sesion 3.3,
+    o una extension del caso de pagos. La primera opcion es la que mas sirve.
+  </div>
+  <div class="foot">SESION FINAL - PROYECTO</div>
+</section>
+
+<!-- 18 -->
+<section>
+  <div class="kicker">Lo que decide la calificacion</div>
+  <h2>Dos renglones de la matriz</h2>
+  <table class="gt">
+    <tr><th>Renglon</th></tr>
+    <tr><td>Las siete preguntas, respondidas sobre <strong>este</strong> sistema</td></tr>
+    <tr><td>Una tabla por motor, <strong>incluidos los descartados</strong></td></tr>
+    <tr><td><strong>Que se cede al elegirlo</strong></td></tr>
+    <tr><td><strong>Que haria cambiar esta decision</strong></td></tr>
+  </table>
+  <div class="box warn small mt">
+    Una matriz sin el renglon de que se cede esta incompleta, aunque la eleccion
+    sea acertada. Siempre se cede algo; si no lo encuentran, no examinaron el
+    problema.
+  </div>
+  <div class="box key small">
+    No se evalua haber elegido los motores que el instructor habria elegido.
+  </div>
+  <div class="foot">SESION FINAL - PROYECTO</div>
+</section>
+
+<!-- 19 -->
+<section>
+  <div class="kicker">Cuatro errores que se repiten</div>
+  <h2>Los que cuestan puntos</h2>
+  <ul class="check small">
+    <li>Proponer cuatro motores porque el curso enseño cuatro. Si uno basta, uno basta</li>
+    <li>Justificar con consignas que el curso desarmo: "es para datos no estructurados", "no escala"</li>
+    <li>Declarar que no se cede nada</li>
+    <li>Reportar un tiempo sin decir cuantas repeticiones ni que estadistico</li>
+  </ul>
+  <div class="box key small">
+    Una arquitectura sencilla bien sustentada vale mas que una complicada sin
+    argumento.
+  </div>
+  <div class="foot">SESION FINAL - PROYECTO</div>
+</section>
+
+<!-- 20 -->
+<section>
+  <div class="kicker">Cierre del curso</div>
+  <h2>Cinco motores, un criterio</h2>
+  <table class="gt tight">
+    <tr><th>Motor</th><th>Su momento</th></tr>
+    <tr><td>SQLite</td><td>Local, un usuario, prototipo</td></tr>
+    <tr><td>PostgreSQL</td><td>Registro de la operacion, integridad, consulta expresiva</td></tr>
+    <tr><td>MongoDB</td><td>Agregado completo, estructura que varia por entero</td></tr>
+    <tr><td>Redis</td><td>Latencia y concurrencia, sobre datos reconstruibles</td></tr>
+    <tr><td>BigQuery</td><td>Analisis del historico, agregacion sobre volumen</td></tr>
+  </table>
+  <div class="box key small mt">
+    Ninguno se estudio a fondo. Cada uno tiene libros enteros dedicados.
+  </div>
+  <div class="box small">
+    Lo que si se cubrio a fondo fue el criterio para elegir entre ellos. En tres
+    anos las versiones habran cambiado y habra motores que hoy no existen. El
+    criterio va a seguir sirviendo.
+  </div>
+  <div class="foot">SESION FINAL - CIERRE</div>
+</section>
+
+<!-- 21 -->
+<section class="azul" data-background-color="#004BB7">
+  <div class="cover">
+    <div class="kicker">Gracias</div>
+    <div class="big">Bases de Datos<br>y SQL con Python</div>
+    <div class="sub">Catorce sesiones, cinco motores, un caso</div>
+    <div class="meta">BSG Institute</div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.06, minScale: 0.2, maxScale: 1.5,
+  hash: true, slideNumber: 'c/t', transition: 'slide'
+});
+</script>
+</body>
+</html>
